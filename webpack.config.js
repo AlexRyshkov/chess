@@ -27,6 +27,9 @@ module.exports = {
         new NodemonPlugin(),
     ],
     resolve: {
+        alias: {
+            src: path.resolve(__dirname, 'src/') // added this
+        },
         extensions: ['.ts', '.js'],
     },
     target: 'node',
