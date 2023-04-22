@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "module": "ESNext",
     "esModuleInterop": true,
     "target": "ES2021",
@@ -12,7 +13,7 @@
     "paths": {
       "src/*": [
         "./src/*"
-      ],
+      ]
     }
   },
   "exclude": ["dist", "node_modules"],
