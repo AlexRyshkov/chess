@@ -23,4 +23,4 @@ volumes:
   server-node-modules:
 networks:
   default:
-    name: blog_network
+    name: chess-network
