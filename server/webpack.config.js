@@ -3,7 +3,7 @@ const NodemonPlugin = require('nodemon-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: path.resolve(__dirname, 'src/index.ts'),
     experiments: {
         topLevelAwait: true,
     },

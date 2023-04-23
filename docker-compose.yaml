@@ -2,12 +2,12 @@ services:
   server:
     restart: unless-stopped
     build:
-      context: .
+      context: ./server
       dockerfile: Dockerfile
     ports:
       - 3002:3002
     volumes:
-      - ./:/app
+      - ./server:/app
       - server-node-modules:/app/node_modules
   db:
     image: postgres
