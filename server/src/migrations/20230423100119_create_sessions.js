@@ -6,7 +6,7 @@ exports.up = function(knex) {
     return knex.schema.createTable('sessions', tableBuilder =>  {
         tableBuilder.string('id').primary();
         tableBuilder.string('access_token').notNullable();
-        tableBuilder.enum('status', ['waitingForPlayer', 'inGame', 'Finished']).notNullable().defaultTo(('waitingForPlayer'))
+        tableBuilder.enum('status', ['waitingForPlayer', 'inGame', 'finished']).notNullable().defaultTo(('waitingForPlayer'))
     })
 };
 

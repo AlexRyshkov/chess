@@ -6,8 +6,8 @@ const StartMenu = () => {
     const navigate = useNavigate();
 
     const startGame = async () => {
-        const {data: id} = await createNewGame();
-        navigate(`/game/${id}`)
+        const {data} = await createNewGame();
+        navigate(`/game/${data.id}`)
     }
 
     return (
