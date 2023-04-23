@@ -1,20 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css';
-import Board from './components/Board';
-import { GameContext } from './features/game/GameProvider';
-import History from './components/History';
+import AppRouter from "./features/routes/AppRouter";
 
 function App() {
-  const { currentSideMove, isCheck, isMate } = useContext(GameContext);
-
-  return (
-    <div style={{ display: 'flex', gridGap: 10 }}>
-      <Board />
-      Current turn: {currentSideMove} <br />
-      {isMate ? 'Mate!' : isCheck ? 'Check!' : ''} <br />
-      <History />
-    </div>
-  );
+    return <>
+        <AppRouter/>
+    </>
 }
 
 export default App;

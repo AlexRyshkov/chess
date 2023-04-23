@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { useDrag } from 'react-dnd';
-import { Figure as FigureType } from '../../features/figures/figure';
-import { GameContext } from '../../features/game/GameProvider';
+import React, {useContext} from 'react';
+import {useDrag} from 'react-dnd';
+import {Figure as FigureType} from '../../features/figures/figure';
+import {GameContext} from '../../features/game/GameProvider';
 
 const FigureImagesConfig: any = {
   white: {

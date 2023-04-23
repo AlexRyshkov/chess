@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GameContext } from '../../features/game/GameProvider';
+import React, {useContext} from 'react';
+import {GameContext} from '../../features/game/GameProvider';
 
 const History = () => {
   const { history } = useContext(GameContext);

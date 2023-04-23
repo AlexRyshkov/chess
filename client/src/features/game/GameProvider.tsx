@@ -1,9 +1,9 @@
-import React, { createContext, ReactElement, useCallback, useEffect, useState } from 'react';
-import { Figure, Grid, King, Side } from '../figures/figure';
-import { useDragLayer } from 'react-dnd';
-import { FigureItem } from '../../components/Figure';
-import { calcIsCheck, calcIsMate } from '../figures/calcMoves';
-import { createCastlingGrid, createDefaultGrid } from '../grids';
+import React, {createContext, ReactElement, useCallback, useEffect, useState} from 'react';
+import {Figure, Grid, King, Side} from '../figures/figure';
+import {useDragLayer} from 'react-dnd';
+import {FigureItem} from '../../components/Figure';
+import {calcIsCheck, calcIsMate} from '../figures/calcMoves';
+import {createCastlingGrid, createDefaultGrid} from '../grids';
 
 export const GameContext = createContext<{
   grid: Grid;

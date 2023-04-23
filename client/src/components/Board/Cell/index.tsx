@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { Grid } from '../../../features/figures/figure';
-import { useDrop } from 'react-dnd';
-import { GameContext } from '../../../features/game/GameProvider';
-import Figure, { FigureItem } from '../../Figure';
+import React, {useContext} from 'react';
+import {Grid} from '../../../features/figures/figure';
+import {useDrop} from 'react-dnd';
+import {GameContext} from '../../../features/game/GameProvider';
+import Figure, {FigureItem} from '../../Figure';
 
 function Cell({ grid, x, y }: { grid: Grid; x: number; y: number }) {
   const { dragAllowedCells, makeMove } = useContext(GameContext);

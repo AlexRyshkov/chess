@@ -1,12 +1,12 @@
 import {
-  calcDiagonalMoves,
-  calcKnightMoves,
-  calcStraightMoves,
-  filterMovesByCheck,
-  isEnemyFigure,
-  isInGridRange,
+    calcDiagonalMoves,
+    calcKnightMoves,
+    calcStraightMoves,
+    filterMovesByCheck,
+    isEnemyFigure,
+    isInGridRange,
 } from './calcMoves';
-import { GameState } from '../game/GameProvider';
+import {GameState} from '../game/GameProvider';
 
 export type Grid = (Figure | null)[][];
 

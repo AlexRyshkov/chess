@@ -1,4 +1,4 @@
-import { Bishop, Grid, King, Knight, Pawn, Queen, Rook, Side } from '../figures/figure';
+import {Bishop, Grid, King, Knight, Pawn, Queen, Rook, Side} from '../figures/figure';
 
 export function createDefaultGrid(): Grid {
   const grid = Array(8);

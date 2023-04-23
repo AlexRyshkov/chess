@@ -1,5 +1,5 @@
-import { Grid, King, Side } from './figure';
-import { GameState } from '../game/GameProvider';
+import {Grid, King, Side} from './figure';
+import {GameState} from '../game/GameProvider';
 
 const diagonalMoveFunctions: [
   (x: number, delta: number) => number,
