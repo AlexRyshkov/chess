@@ -3,6 +3,7 @@ import Session, {SessionStatus} from "src/models/Session"
 // import {socketService} from "src/index";
 import {createDefaultGrid, createGame} from "src/features/game/GameManager";
 import GameState from "src/models/GameState";
+import {socketService} from "src/index";
 
 const router = express.Router()
 
@@ -14,6 +15,7 @@ router.get('/game/new', async (req, res) => {
 
     const gameState = createGame();
     await GameState.query().insert({session_id: session.id, data: gameState});
+    socketService.createGameSessionSocket(session);
     res.status(200).send({id: session.id, access_token: session.access_token});
 });
 
