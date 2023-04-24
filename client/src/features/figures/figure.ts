@@ -20,6 +20,7 @@ const pawnStartX = { [Side.WHITE]: 1, [Side.BLACK]: 6 };
 
 export abstract class Figure {
   side: Side;
+  abstract name: string;
 
   constructor(side: Side) {
     this.side = side;
@@ -37,6 +38,7 @@ export abstract class Figure {
 }
 
 export class Pawn extends Figure {
+  name='Pawn';
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const { grid } = gameState;
     const result: [number, number][] = [];
@@ -66,30 +68,40 @@ export class Pawn extends Figure {
 }
 
 export class Bishop extends Figure {
+  name='Bishop';
+
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcDiagonalMoves(gameState.grid, x, y);
   }
 }
 
 export class Knight extends Figure {
+  name='Knight';
+
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcKnightMoves(gameState.grid, x, y);
   }
 }
 
 export class Rook extends Figure {
+  name='Rook';
+
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcStraightMoves(gameState.grid, x, y);
   }
 }
 
 export class Queen extends Figure {
+  name='Queen';
+
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return [...calcStraightMoves(gameState.grid, x, y), ...calcDiagonalMoves(gameState.grid, x, y)];
   }
 }
 
 export class King extends Figure {
+  name='King';
+
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
 

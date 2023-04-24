@@ -5,7 +5,7 @@ const History = () => {
   const { history } = useContext(GameContext);
   return (
     <div>
-      {history.map(({ from: [fromX, fromY], to: [toX, toY], figure }, i) => (
+      {history?.map(({ from: [fromX, fromY], to: [toX, toY], figure }, i) => (
         <div key={i}>{`[${fromX}, ${fromY}] -> [${toX}, ${toY}]`}</div>
       ))}
     </div>

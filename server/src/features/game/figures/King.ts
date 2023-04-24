@@ -1,8 +1,11 @@
-import {GameState} from "src/types/GameState";
-import {Figure} from "src/types/Figure";
-import {isEnemyFigure, isInGridRange} from "src/features/figures/calcMoves";
+import {GameState} from "src/features/game/types/GameState";
+import {isEnemyFigure, isInGridRange} from "src/features/game/figures/calcMoves";
+import {Figure} from "src/features/game/figures/Figure";
 
 export class King extends Figure {
+    name: string = 'King';
+
+
     getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
         const result: [number, number][] = [];
 

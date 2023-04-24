@@ -1,12 +1,15 @@
-import {Figure} from "src/types/Figure";
-import {GameState} from "src/types/GameState";
-import {isEnemyFigure} from "src/features/figures/calcMoves";
-import {Side} from "src/enums/Side";
+import {Figure} from "src/features/game/figures/Figure";
+import {GameState} from "src/features/game/types/GameState";
+import {isEnemyFigure} from "src/features/game/figures/calcMoves";
+import {Side} from "src/features/game/enums/Side";
 
 const xSigns = { [Side.WHITE]: 1, [Side.BLACK]: -1 };
 const pawnStartX = { [Side.WHITE]: 1, [Side.BLACK]: 6 };
 
 export class Pawn extends Figure {
+    name: string = 'Pawn';
+
+
     getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
         const { grid } = gameState;
         const result: [number, number][] = [];

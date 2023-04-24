@@ -1,7 +1,7 @@
-import {Grid} from "src/types/Grid";
-import {Side} from "src/enums/Side";
-import {GameState} from "src/types/GameState";
-import {King} from "src/features/figures/King";
+import {Grid} from "src/features/game/types/Grid";
+import {Side} from "src/features/game/enums/Side";
+import {GameState} from "src/features/game/types/GameState";
+import {King} from "src/features/game/figures/King";
 
 const diagonalMoveFunctions: [
   (x: number, delta: number) => number,
@@ -140,7 +140,8 @@ function isKingAttacked(gameState: GameState, side: Side) {
   const { grid } = gameState;
   const sideAttackedCells = getSideAttackedCells(gameState, side);
   return sideAttackedCells.some(([x, y]) =>
-    grid[x][y] instanceof King ? grid[x][y]?.side === side : false,
+      // @ts-ignore
+    typeof grid[x][y] === 'King' ? grid[x][y]?.side === side : false,
   );
 }
 
@@ -167,7 +168,8 @@ export function calcIsMate(gameState: GameState, side: Side) {
 function getKing(grid: Grid, side: Side) {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid.length; j++) {
-      if (grid[i][j] instanceof King && grid[i][j]?.side === side) {
+      // @ts-ignore
+      if (typeof grid[i][j] === 'King' && grid[i][j]?.side === side) {
         return grid[i][j];
       }
     }

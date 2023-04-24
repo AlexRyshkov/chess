@@ -25,18 +25,18 @@ const FigureImagesConfig: any = {
 export type FigureItem = { figure: FigureType; x: number; y: number };
 
 export default function Figure({ figure, x, y }: { figure: FigureType; x: number; y: number }) {
-  const { currentSideMove } = useContext(GameContext);
+  const { currentSideMove, playerSide } = useContext(GameContext);
 
   const [_, drag] = useDrag(
     () => ({
       type: 'Figure',
       item: { figure, x, y },
-      canDrag: () => figure?.side === currentSideMove,
+      canDrag: () => playerSide === currentSideMove && figure?.side === currentSideMove,
     }),
-    [figure, x, y, currentSideMove],
+    [figure, x, y, currentSideMove, playerSide],
   );
 
   return (
-    <img width='100%' ref={drag} src={FigureImagesConfig[figure.side][figure.constructor.name]} />
+    <img width='100%' ref={drag} src={FigureImagesConfig[figure.side][figure.name]} />
   );
 }

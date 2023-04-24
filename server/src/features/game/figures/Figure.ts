@@ -1,9 +1,10 @@
-import {GameState} from "src/types/GameState";
-import {Side} from "src/enums/Side";
-import {filterMovesByCheck} from "src/features/figures/calcMoves";
+import {GameState} from "src/features/game/types/GameState";
+import {Side} from "src/features/game/enums/Side";
+import {filterMovesByCheck} from "src/features/game/figures/calcMoves";
 
 export abstract class Figure {
     side: Side;
+    abstract name: string;
 
     constructor(side: Side) {
         this.side = side;
