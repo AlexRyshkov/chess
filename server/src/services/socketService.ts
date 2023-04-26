@@ -21,6 +21,7 @@ export default class SocketService {
         const gameNamespace = this.ioInstance.of(session.id);
 
         gameNamespace.on("connection", async (socket) => {
+            console.log(`connected to ${session.id}`)
             const gameState = await GameState.query().findById(session.id);
             socket.emit('state', gameState.data);
 
@@ -57,6 +58,8 @@ export default class SocketService {
                 callback(newGameState);
             });
         });
+
+        console.log(`created socket for session: ${session.id}`)
         return gameNamespace;
     }
 }

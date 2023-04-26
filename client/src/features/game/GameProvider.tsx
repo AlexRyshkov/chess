@@ -66,6 +66,7 @@ const GameProvider = ({children}: { children: ReactElement }) => {
             }
 
             const socket = await getGameSocket(id);
+            console.log(socket);
 
             socket.on('connect', () => {
                 console.log('connected to server')

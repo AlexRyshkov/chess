@@ -4,8 +4,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    ports:
-      - 3002:3002
+    # ports:
+    #   - 3002:3002
     volumes:
       - ./server:/app
       - server-node-modules:/app/node_modules
@@ -14,8 +14,8 @@ services:
     build:
         context: ./client
         dockerfile: Dockerfile
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     volumes:
       - ./client:/app
       - client-node-modules:/app/node_modules
@@ -24,8 +24,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: 123
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
   nginx:

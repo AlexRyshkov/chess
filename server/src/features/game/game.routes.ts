@@ -8,10 +8,14 @@ import {socketService} from "src/index";
 const router = express.Router()
 
 router.get('/game/new', async (req, res) => {
+    console.log(999);
+
     const session = await Session.query().insert({
         id: crypto.randomUUID(),
         access_token: crypto.randomUUID()
     });
+
+    console.log(session);
 
     const gameState = createGame();
     await GameState.query().insert({session_id: session.id, data: gameState});
