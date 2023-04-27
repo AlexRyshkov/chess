@@ -12,8 +12,8 @@ services:
   client:
     restart: unless-stopped
     build:
-        context: ./client
-        dockerfile: Dockerfile
+      context: ./client
+      dockerfile: Dockerfile
     # ports:
     #   - 3000:3000
     volumes:
@@ -24,8 +24,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: 123
-    # ports:
-    #   - 5432:5432
+    ports:
+      - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
   nginx:
