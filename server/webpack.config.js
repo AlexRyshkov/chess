@@ -4,9 +4,6 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: path.resolve(__dirname, 'src/index.ts'),
-    experiments: {
-        topLevelAwait: true,
-    },
     externals: [nodeExternals()],
     mode: 'development',
     module: {

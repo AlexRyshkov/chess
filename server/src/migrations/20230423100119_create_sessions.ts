@@ -1,8 +1,6 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.up = function (knex) {
+import { Knex } from "knex";
+
+export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("sessions", (tableBuilder) => {
     tableBuilder.string("id").primary();
     tableBuilder
@@ -10,12 +8,8 @@ exports.up = function (knex) {
       .notNullable()
       .defaultTo("waitingForPlayer");
   });
-};
+}
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.down = function (knex) {
+export async function down(knex: Knex): Promise<void> {
   return knex.schema.dropTableIfExists("sessions");
-};
+}
