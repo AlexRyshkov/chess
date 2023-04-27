@@ -9,6 +9,8 @@ import Session, { SessionStatus } from "src/models/Session";
 const router = express.Router();
 
 router.get("/game/new", async (req, res) => {
+  throw new Error("error example");
+
   const session = await Session.query().insert({
     id: nanoid(),
   });
