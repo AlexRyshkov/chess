@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
       .enum("status", ["waitingForPlayer", "inGame", "finished"])
       .notNullable()
       .defaultTo("waitingForPlayer");
+    tableBuilder.string("accessToken").notNullable();
   });
 }
 
