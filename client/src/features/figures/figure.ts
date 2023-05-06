@@ -1,12 +1,12 @@
+import { GameState } from '../game/GameProvider';
 import {
-    calcDiagonalMoves,
-    calcKnightMoves,
-    calcStraightMoves,
-    filterMovesByCheck,
-    isEnemyFigure,
-    isInGridRange,
+  calcDiagonalMoves,
+  calcKnightMoves,
+  calcStraightMoves,
+  filterMovesByCheck,
+  isEnemyFigure,
+  isInGridRange,
 } from './calcMoves';
-import {GameState} from '../game/GameProvider';
 
 export type Grid = (Figure | null)[][];
 
@@ -38,7 +38,7 @@ export abstract class Figure {
 }
 
 export class Pawn extends Figure {
-  name='Pawn';
+  name = 'Pawn';
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const { grid } = gameState;
     const result: [number, number][] = [];
@@ -57,6 +57,12 @@ export class Pawn extends Figure {
   getAllowedAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
     const xSign = xSigns[this.side];
+    const lastMove = gameState.history[gameState.history.length - 1];
+    const isEnemyPawnFirstMove =
+      lastMove.figure.name === 'Pawn' && lastMove.from[0] === pawnStartX[lastMove.figure.side];
+    if (isEnemyPawnFirstMove && Math.abs(lastMove.to[1] - y) === 1) {
+      result.push([x + xSign, lastMove.to[1]]);
+    }
     if (isEnemyFigure(gameState.grid, [x, y], [x + xSign, y - 1])) {
       result.push([x + xSign, y - 1]);
     }
@@ -68,7 +74,7 @@ export class Pawn extends Figure {
 }
 
 export class Bishop extends Figure {
-  name='Bishop';
+  name = 'Bishop';
 
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcDiagonalMoves(gameState.grid, x, y);
@@ -76,7 +82,7 @@ export class Bishop extends Figure {
 }
 
 export class Knight extends Figure {
-  name='Knight';
+  name = 'Knight';
 
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcKnightMoves(gameState.grid, x, y);
@@ -84,7 +90,7 @@ export class Knight extends Figure {
 }
 
 export class Rook extends Figure {
-  name='Rook';
+  name = 'Rook';
 
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcStraightMoves(gameState.grid, x, y);
@@ -92,7 +98,7 @@ export class Rook extends Figure {
 }
 
 export class Queen extends Figure {
-  name='Queen';
+  name = 'Queen';
 
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return [...calcStraightMoves(gameState.grid, x, y), ...calcDiagonalMoves(gameState.grid, x, y)];
@@ -100,7 +106,7 @@ export class Queen extends Figure {
 }
 
 export class King extends Figure {
-  name='King';
+  name = 'King';
 
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
