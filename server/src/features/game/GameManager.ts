@@ -10,7 +10,7 @@ import { Grid } from "src/features/game/types/Grid";
 
 export function createGame(): GameState {
   return {
-    grid: createCastlingGrid(),
+    grid: createDefaultGrid(),
     currentSideMove: Side.WHITE,
     history: [],
     isCheck: false,
