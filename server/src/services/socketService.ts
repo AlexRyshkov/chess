@@ -68,8 +68,8 @@ export default class SocketService {
         const newGameState = {
           grid: newGrid,
           currentSideMove: oppositeSide,
-          isCheck: false,
-          isMate: false,
+          isCheck,
+          isMate,
           history: [
             ...gameState.history,
             { from: [fromX, fromY], to: [toX, toY], figure: figure },
