@@ -41,6 +41,18 @@ export default class SocketService {
           newGrid[fromX][toY] = null;
         }
 
+        // castling check
+        if (figure.name === "King" && Math.abs(fromY - toY) === 2) {
+          const castlingDirection = toY - fromY > 0 ? 1 : -1;
+          const [rookX, rookY] = [
+            toX,
+            castlingDirection > 0 ? grid.length - 1 : 0,
+          ];
+          const rook = newGrid[rookX][rookY];
+          newGrid[rookX][fromY + castlingDirection] = rook;
+          newGrid[rookX][rookY] = null;
+        }
+
         newGrid[toX][toY] = figure;
         newGrid[fromX][fromY] = null;
 
