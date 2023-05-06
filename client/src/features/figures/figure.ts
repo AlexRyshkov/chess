@@ -61,7 +61,7 @@ export class Pawn extends Figure {
     const lastMove = gameState.history[gameState.history.length - 1];
     const isEnemyPawnFirstMove =
       lastMove?.figure?.name === 'Pawn' && lastMove.from[0] === pawnStartX[lastMove.figure.side];
-    if (isEnemyPawnFirstMove && Math.abs(lastMove.to[1] - y) === 1) {
+    if (isEnemyPawnFirstMove && Math.abs(lastMove.to[1] - y) === 1 && lastMove.to[0] === x) {
       result.push([x + xSign, lastMove.to[1]]);
     }
     if (isEnemyFigure(gameState.grid, [x, y], [x + xSign, y - 1])) {
