@@ -9,7 +9,7 @@ const pawnStartX = { [Side.WHITE]: 1, [Side.BLACK]: 6 };
 export class Pawn extends Figure {
   name: string = "Pawn";
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const { grid } = gameState;
     const result: [number, number][] = [];
     const startX = pawnStartX[this.side];
@@ -20,11 +20,11 @@ export class Pawn extends Figure {
         result.push([x + 2 * xSign, y]);
       }
     }
-    result.push(...this.getAllowedAttackCells(gameState, x, y));
+    result.push(...this.getAttackCells(gameState, x, y));
     return result;
   }
 
-  getAllowedAttackCells(
+  getAttackCells(
     gameState: GameState,
     x: number,
     y: number

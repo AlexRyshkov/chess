@@ -1,17 +1,16 @@
-import { GameState } from "src/features/game/types/GameState";
 import {
-  getSideAttackedCells,
   hasMovedPreviously,
   isEnemyFigure,
   isInGridRange,
 } from "src/features/game/figures/calcMoves";
 import { Figure } from "src/features/game/figures/Figure";
+import { GameState } from "src/features/game/types/GameState";
 import { FIGURE_START_LOCATIONS } from "./startLocations";
 
 export class King extends Figure {
   name = "King";
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
 
     // castling check
@@ -25,18 +24,6 @@ export class King extends Figure {
       if (!kingMoved) {
         for (const [rookX, rookY] of rookStartLocations) {
           const castlingSign = rookY > y ? -1 : 1;
-
-          const sideAttackedCells = getSideAttackedCells(gameState, this.side);
-
-          // check if some of king passed cells is under attack
-          if (
-            sideAttackedCells.some(
-              ([, y]) => y === y - castlingSign || y === y - 2 * castlingSign
-            )
-          ) {
-            continue;
-          }
-
           if (!hasMovedPreviously(gameState, [rookX, rookY])) {
             let canDoCastling = true;
             for (let i = rookY + castlingSign; i < y; i = i + castlingSign) {
@@ -67,5 +54,23 @@ export class King extends Figure {
       }
     }
     return result;
+  }
+
+  override getAllowedMoves(
+    gameState: GameState,
+    x: number,
+    y: number
+  ): [number, number][] {
+    const moves = super.getAllowedMoves(gameState, x, y);
+    const filteredByCastling = moves.filter(([, moveY]) => {
+      // castling move
+      if (Math.abs(moveY - y) === 2) {
+        console.log(moveY);
+        return moves.some(([, y]) => Math.abs(moveY - y) === 1);
+      }
+      return true;
+    });
+
+    return filteredByCastling;
   }
 }

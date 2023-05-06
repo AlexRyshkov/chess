@@ -1,22 +1,34 @@
-import {GameState} from "src/features/game/types/GameState";
-import {Side} from "src/features/game/enums/Side";
-import {filterMovesByCheck} from "src/features/game/figures/calcMoves";
+import { Side } from "src/features/game/enums/Side";
+import { filterMovesByCheck } from "src/features/game/figures/calcMoves";
+import { GameState } from "src/features/game/types/GameState";
 
 export abstract class Figure {
-    side: Side;
-    abstract name: string;
+  side: Side;
+  abstract name: string;
 
-    constructor(side: Side) {
-        this.side = side;
-    }
+  constructor(side: Side) {
+    this.side = side;
+  }
 
-    abstract getAllMoves(gameState: GameState, x: number, y: number): [number, number][];
+  abstract getMoves(
+    gameState: GameState,
+    x: number,
+    y: number
+  ): [number, number][];
 
-    getAllowedMoves(gameState: GameState, x: number, y: number): [number, number][] {
-        return filterMovesByCheck(gameState, x, y, this.getAllMoves(gameState, x, y));
-    }
+  getAttackCells(
+    gameState: GameState,
+    x: number,
+    y: number
+  ): [number, number][] {
+    return this.getMoves(gameState, x, y);
+  }
 
-    getAllowedAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
-        return this.getAllMoves(gameState, x, y);
-    }
+  getAllowedMoves(
+    gameState: GameState,
+    x: number,
+    y: number
+  ): [number, number][] {
+    return filterMovesByCheck(gameState, x, y, this.getMoves(gameState, x, y));
+  }
 }

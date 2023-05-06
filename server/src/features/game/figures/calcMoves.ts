@@ -135,7 +135,7 @@ export function getSideAttackedCells(
     for (let j = 0; j < grid.length; j++) {
       const cell = grid[i][j];
       if (cell !== null && cell.side !== side) {
-        result.push(...cell.getAllowedAttackCells(gameState, i, j));
+        result.push(...cell.getAttackCells(gameState, i, j));
       }
     }
   }
@@ -159,7 +159,7 @@ export function calcIsMate(gameState: GameState, side: Side) {
   if (calcIsCheck(gameState, side)) {
     const figuresPositions = getFiguresPositions(grid, side);
     return figuresPositions.every(([x, y]) => {
-      return grid[x][y]?.getAllMoves(gameState, x, y).every(([x1, y1]) => {
+      return grid[x][y]?.getMoves(gameState, x, y).every(([x1, y1]) => {
         const newGrid = grid.map((row) => row.slice());
         newGrid[x1][y1] = newGrid[x][y];
         newGrid[x][y] = null;

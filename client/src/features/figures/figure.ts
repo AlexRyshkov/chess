@@ -4,7 +4,6 @@ import {
   calcKnightMoves,
   calcStraightMoves,
   filterMovesByCheck,
-  getSideAttackedCells,
   hasMovedPreviously,
   isEnemyFigure,
   isInGridRange,
@@ -28,20 +27,20 @@ export abstract class Figure {
     this.side = side;
   }
 
-  abstract getAllMoves(gameState: GameState, x: number, y: number): [number, number][];
+  abstract getMoves(gameState: GameState, x: number, y: number): [number, number][];
 
-  getAllowedMoves(gameState: GameState, x: number, y: number): [number, number][] {
-    return filterMovesByCheck(gameState, x, y, this.getAllMoves(gameState, x, y));
+  getAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
+    return this.getMoves(gameState, x, y);
   }
 
-  getAllowedAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
-    return this.getAllMoves(gameState, x, y);
+  getAllowedMoves(gameState: GameState, x: number, y: number): [number, number][] {
+    return filterMovesByCheck(gameState, x, y, this.getMoves(gameState, x, y));
   }
 }
 
 export class Pawn extends Figure {
   name = 'Pawn';
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const { grid } = gameState;
     const result: [number, number][] = [];
     const startX = pawnStartX[this.side];
@@ -52,11 +51,11 @@ export class Pawn extends Figure {
         result.push([x + 2 * xSign, y]);
       }
     }
-    result.push(...this.getAllowedAttackCells(gameState, x, y));
+    result.push(...this.getAttackCells(gameState, x, y));
     return result;
   }
 
-  getAllowedAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
+  getAttackCells(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
     const xSign = xSigns[this.side];
     const lastMove = gameState.history[gameState.history.length - 1];
@@ -78,7 +77,7 @@ export class Pawn extends Figure {
 export class Bishop extends Figure {
   name = 'Bishop';
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcDiagonalMoves(gameState.grid, x, y);
   }
 }
@@ -86,7 +85,7 @@ export class Bishop extends Figure {
 export class Knight extends Figure {
   name = 'Knight';
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcKnightMoves(gameState.grid, x, y);
   }
 }
@@ -94,7 +93,7 @@ export class Knight extends Figure {
 export class Rook extends Figure {
   name = 'Rook';
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return calcStraightMoves(gameState.grid, x, y);
   }
 }
@@ -102,7 +101,7 @@ export class Rook extends Figure {
 export class Queen extends Figure {
   name = 'Queen';
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     return [...calcStraightMoves(gameState.grid, x, y), ...calcDiagonalMoves(gameState.grid, x, y)];
   }
 }
@@ -110,7 +109,7 @@ export class Queen extends Figure {
 export class King extends Figure {
   name = 'King';
 
-  getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
 
     // castling check
@@ -121,16 +120,6 @@ export class King extends Figure {
       if (!kingMoved) {
         for (const [rookX, rookY] of rookStartLocations) {
           const castlingSign = rookY > y ? -1 : 1;
-
-          const sideAttackedCells = getSideAttackedCells(gameState, this.side);
-
-          // check if some of king passed cells is under attack
-          if (
-            sideAttackedCells.some(([, y]) => y === y - castlingSign || y === y - 2 * castlingSign)
-          ) {
-            continue;
-          }
-
           if (!hasMovedPreviously(gameState, [rookX, rookY])) {
             let canDoCastling = true;
             for (let i = rookY + castlingSign; i < y; i = i + castlingSign) {
@@ -160,6 +149,20 @@ export class King extends Figure {
       }
     }
     return result;
+  }
+
+  override getAllowedMoves(gameState: GameState, x: number, y: number): [number, number][] {
+    const moves = super.getAllowedMoves(gameState, x, y);
+    const filteredByCastling = moves.filter(([, moveY]) => {
+      // castling move
+      if (Math.abs(moveY - y) === 2) {
+        console.log(moveY);
+        return moves.some(([, y]) => Math.abs(moveY - y) === 1);
+      }
+      return true;
+    });
+
+    return filteredByCastling;
   }
 }
 

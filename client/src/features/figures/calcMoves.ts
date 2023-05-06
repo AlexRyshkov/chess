@@ -1,5 +1,5 @@
 import { GameState } from '../game/GameProvider';
-import { Grid, King, Side } from './figure';
+import { Grid, Side } from './figure';
 
 const diagonalMoveFunctions: [
   (x: number, delta: number) => number,
@@ -127,18 +127,18 @@ export function getSideAttackedCells(gameState: GameState, side: Side): [number,
     for (let j = 0; j < grid.length; j++) {
       const cell = grid[i][j];
       if (cell !== null && cell.side !== side) {
-        result.push(...cell.getAllowedAttackCells(gameState, i, j));
+        result.push(...cell.getAttackCells(gameState, i, j));
       }
     }
   }
   return result;
 }
 
-function isKingAttacked(gameState: GameState, side: Side) {
+export function isKingAttacked(gameState: GameState, side: Side) {
   const { grid } = gameState;
   const sideAttackedCells = getSideAttackedCells(gameState, side);
   return sideAttackedCells.some(([x, y]) =>
-    grid[x][y] instanceof King ? grid[x][y]?.side === side : false,
+    grid[x][y]?.name === 'King' ? grid[x][y]?.side === side : false,
   );
 }
 
@@ -151,7 +151,7 @@ export function calcIsMate(gameState: GameState, side: Side) {
   if (calcIsCheck(gameState, side)) {
     const figuresPositions = getFiguresPositions(grid, side);
     return figuresPositions.every(([x, y]) => {
-      return grid[x][y]?.getAllMoves(gameState, x, y).every(([x1, y1]) => {
+      return grid[x][y]?.getMoves(gameState, x, y).every(([x1, y1]) => {
         const newGrid = grid.map((row) => row.slice());
         newGrid[x1][y1] = newGrid[x][y];
         newGrid[x][y] = null;
@@ -165,7 +165,7 @@ export function calcIsMate(gameState: GameState, side: Side) {
 function getKing(grid: Grid, side: Side) {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid.length; j++) {
-      if (grid[i][j] instanceof King && grid[i][j]?.side === side) {
+      if (grid[i][j]?.name === 'King' && grid[i][j]?.side === side) {
         return grid[i][j];
       }
     }
