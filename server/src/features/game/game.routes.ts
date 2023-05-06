@@ -1,5 +1,5 @@
+import crypto from "crypto";
 import express from "express";
-import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import { createGame } from "src/features/game/GameManager";
 import { socketService } from "src/index";
@@ -9,28 +9,22 @@ import Session, { SessionStatus } from "src/models/Session";
 const router = express.Router();
 
 router.get("/game/new", async (req, res) => {
-  throw new Error("error example");
-
   const session = await Session.query().insert({
     id: nanoid(),
+    accessToken: crypto.randomBytes(16).toString("base64"),
   });
 
   const gameState = createGame();
   await GameState.query().insert({ session_id: session.id, data: gameState });
   socketService.createGameSessionSocket(session);
-  const accessToken = jwt.sign(
-    { sessionId: session.id },
-    process.env.SECRET_KEY,
-    { algorithm: "RS256" }
-  );
 
   res.status(200).send({
     id: session.id,
-    accessToken,
+    accessToken: session.accessToken,
   });
 });
 
-router.get("/game/:id/join", async (req, res) => {
+router.get("/game/:id/join", async (req, res, next) => {
   try {
     const session = await Session.query().findById(req.params.id);
     if (!session) {
@@ -38,19 +32,14 @@ router.get("/game/:id/join", async (req, res) => {
     }
 
     if (session.status === SessionStatus.waitingForPlayer) {
-      await session.$query().insert({ status: SessionStatus.inGame });
-      const accessToken = jwt.sign(
-        { sessionId: session.id },
-        process.env.SECRET_KEY,
-        { algorithm: "RS256" }
-      );
-      return res.status(200).send(accessToken);
+      await session.$query().update({ status: SessionStatus.inGame });
+
+      return res.status(200).send(session.accessToken);
     } else {
-      return res.status(409).send("Game session is not available for join");
+      return res.status(200).send();
     }
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    next(error);
   }
 });
 

@@ -9,6 +9,7 @@ export enum SessionStatus {
 class Session extends Model {
   id: string;
   status: SessionStatus;
+  accessToken: string;
 
   static get tableName(): string {
     return "sessions";
