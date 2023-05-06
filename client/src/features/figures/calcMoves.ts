@@ -1,5 +1,5 @@
-import {Grid, King, Side} from './figure';
-import {GameState} from '../game/GameProvider';
+import { GameState } from '../game/GameProvider';
+import { Grid, King, Side } from './figure';
 
 const diagonalMoveFunctions: [
   (x: number, delta: number) => number,
@@ -120,7 +120,7 @@ export function filterMovesByCheck(
   return result;
 }
 
-function getSideAttackedCells(gameState: GameState, side: Side): [number, number][] {
+export function getSideAttackedCells(gameState: GameState, side: Side): [number, number][] {
   const { grid } = gameState;
   const result: [number, number][] = [];
   for (let i = 0; i < grid.length; i++) {
@@ -182,4 +182,11 @@ function getFiguresPositions(grid: Grid, side: Side) {
     }
   }
   return result;
+}
+
+export function hasMovedPreviously(gameState: GameState, from: [number, number]) {
+  return (
+    gameState.history.filter((move) => move.from[0] === from[0] && move.from[1] === from[1])
+      .length > 0
+  );
 }

@@ -1,11 +1,10 @@
-import {Grid} from "src/features/game/types/Grid";
-import {Side} from "src/features/game/enums/Side";
-import {GameState} from "src/features/game/types/GameState";
-import {King} from "src/features/game/figures/King";
+import { Side } from "../enums/Side";
+import { GameState } from "../types/GameState";
+import { Grid } from "../types/Grid";
 
 const diagonalMoveFunctions: [
   (x: number, delta: number) => number,
-  (y: number, delta: number) => number,
+  (y: number, delta: number) => number
 ][] = [
   [(x, delta) => x + delta, (y, delta) => y + delta],
   [(x, delta) => x + delta, (y, delta) => y - delta],
@@ -15,7 +14,7 @@ const diagonalMoveFunctions: [
 
 const straightMoveFunctions: [
   (x: number, delta: number) => number,
-  (y: number, delta: number) => number,
+  (y: number, delta: number) => number
 ][] = [
   [(x, delta) => x + delta, (y, delta) => y],
   [(x, delta) => x - delta, (y, delta) => y],
@@ -40,7 +39,11 @@ export function isInGridRange(grid: Grid, ...coords: number[]) {
   return coords.every((cord) => cord >= 0 && cord < grid.length);
 }
 
-export function isEnemyFigure(grid: Grid, [x1, y1]: number[], [x2, y2]: number[]) {
+export function isEnemyFigure(
+  grid: Grid,
+  [x1, y1]: number[],
+  [x2, y2]: number[]
+) {
   if (isInGridRange(grid, x1, y1, x2, y2)) {
     const f1 = grid[x1][y1];
     const f2 = grid[x2][y2];
@@ -72,7 +75,7 @@ export function calcKnightMoves(grid: Grid, x: number, y: number) {
     result.push(cords);
   }
   return result.filter(
-    ([x1, y1]) => grid[x1][y1] === null || isEnemyFigure(grid, [x, y], [x1, y1]),
+    ([x1, y1]) => grid[x1][y1] === null || isEnemyFigure(grid, [x, y], [x1, y1])
   );
 }
 
@@ -81,7 +84,7 @@ function calcAllowedMove(
   x: number,
   y: number,
   calcX: (x: number, delta: number) => number,
-  calcY: (y: number, delta: number) => number,
+  calcY: (y: number, delta: number) => number
 ): [number, number][] {
   const result: [number, number][] = [];
   for (let i = 1; i < grid.length; i++) {
@@ -104,7 +107,7 @@ export function filterMovesByCheck(
   gameState: GameState,
   x: number,
   y: number,
-  moves: [number, number][],
+  moves: [number, number][]
 ): [number, number][] {
   const { grid } = gameState;
   const side = grid[x][y]!.side;
@@ -122,7 +125,10 @@ export function filterMovesByCheck(
   return result;
 }
 
-function getSideAttackedCells(gameState: GameState, side: Side): [number, number][] {
+export function getSideAttackedCells(
+  gameState: GameState,
+  side: Side
+): [number, number][] {
   const { grid } = gameState;
   const result: [number, number][] = [];
   for (let i = 0; i < grid.length; i++) {
@@ -140,8 +146,7 @@ function isKingAttacked(gameState: GameState, side: Side) {
   const { grid } = gameState;
   const sideAttackedCells = getSideAttackedCells(gameState, side);
   return sideAttackedCells.some(([x, y]) =>
-      // @ts-ignore
-    typeof grid[x][y] === 'King' ? grid[x][y]?.side === side : false,
+    grid[x][y]?.name === "King" ? grid[x][y]?.side === side : false
   );
 }
 
@@ -168,8 +173,7 @@ export function calcIsMate(gameState: GameState, side: Side) {
 function getKing(grid: Grid, side: Side) {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid.length; j++) {
-      // @ts-ignore
-      if (typeof grid[i][j] === 'King' && grid[i][j]?.side === side) {
+      if (grid[i][j]?.name === "King" && grid[i][j]?.side === side) {
         return grid[i][j];
       }
     }
@@ -186,4 +190,15 @@ function getFiguresPositions(grid: Grid, side: Side) {
     }
   }
   return result;
+}
+
+export function hasMovedPreviously(
+  gameState: GameState,
+  from: [number, number]
+) {
+  return (
+    gameState.history.filter(
+      (move) => move.from[0] === from[0] && move.from[1] === from[1]
+    ).length > 0
+  );
 }

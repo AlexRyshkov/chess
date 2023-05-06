@@ -4,6 +4,8 @@ import {
   calcKnightMoves,
   calcStraightMoves,
   filterMovesByCheck,
+  getSideAttackedCells,
+  hasMovedPreviously,
   isEnemyFigure,
   isInGridRange,
 } from './calcMoves';
@@ -59,7 +61,7 @@ export class Pawn extends Figure {
     const xSign = xSigns[this.side];
     const lastMove = gameState.history[gameState.history.length - 1];
     const isEnemyPawnFirstMove =
-      lastMove.figure.name === 'Pawn' && lastMove.from[0] === pawnStartX[lastMove.figure.side];
+      lastMove?.figure?.name === 'Pawn' && lastMove.from[0] === pawnStartX[lastMove.figure.side];
     if (isEnemyPawnFirstMove && Math.abs(lastMove.to[1] - y) === 1) {
       result.push([x + xSign, lastMove.to[1]]);
     }
@@ -111,6 +113,40 @@ export class King extends Figure {
   getAllMoves(gameState: GameState, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
 
+    // castling check
+    if (!gameState.isCheck) {
+      const kingMoved = hasMovedPreviously(gameState, FIGURE_START_LOCATIONS[this.side][this.name]);
+      const rookStartLocations = FIGURE_START_LOCATIONS[this.side]['Rook'];
+
+      if (!kingMoved) {
+        for (const [rookX, rookY] of rookStartLocations) {
+          const castlingSign = rookY > y ? -1 : 1;
+
+          const sideAttackedCells = getSideAttackedCells(gameState, this.side);
+
+          // check if some of king passed cells is under attack
+          if (
+            sideAttackedCells.some(([, y]) => y === y - castlingSign || y === y - 2 * castlingSign)
+          ) {
+            continue;
+          }
+
+          if (!hasMovedPreviously(gameState, [rookX, rookY])) {
+            let canDoCastling = true;
+            for (let i = rookY + castlingSign; i < y; i = i + castlingSign) {
+              if (gameState.grid[x][i] !== null) {
+                canDoCastling = false;
+                break;
+              }
+            }
+            if (canDoCastling) {
+              result.push([x, y - 2 * castlingSign]);
+            }
+          }
+        }
+      }
+    }
+
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         const newX = x + i;
@@ -126,3 +162,20 @@ export class King extends Figure {
     return result;
   }
 }
+
+const FIGURE_START_LOCATIONS: any = {
+  [Side.WHITE]: {
+    Rook: [
+      [0, 0],
+      [0, 7],
+    ],
+    King: [0, 3],
+  },
+  [Side.BLACK]: {
+    Rook: [
+      [7, 0],
+      [7, 7],
+    ],
+    King: [7, 3],
+  },
+};

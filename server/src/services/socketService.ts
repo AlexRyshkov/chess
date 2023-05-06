@@ -26,6 +26,7 @@ export default class SocketService {
 
       socket.on("move", async (message, callback) => {
         const { fromX, fromY, toX, toY } = message;
+
         const gameStateRecord = await GameState.query().findById(session.id);
         const gameState = jsonGameStateToClass(gameStateRecord.data);
         const { grid, currentSideMove } = gameState;
@@ -34,22 +35,20 @@ export default class SocketService {
         const newGrid = grid.map((row) => row.slice());
         const oppositeSide =
           currentSideMove === Side.WHITE ? Side.BLACK : Side.WHITE;
+
         // passant check
         if (figure.name === "Pawn" && fromY !== toY) {
           newGrid[fromX][toY] = null;
         }
+
         newGrid[toX][toY] = figure;
         newGrid[fromX][fromY] = null;
-
-        // if (figure instanceof King && Math.abs(toY - fromY) === 2) {
-        //     newGrid[fromX][fromY - 1] = newGrid[0][0];
-        //     newGrid[0][0] = null;
-        // }
 
         const isCheck = calcIsCheck(
           { ...gameState, grid: newGrid },
           oppositeSide
         );
+
         const isMate = isCheck
           ? calcIsMate({ ...gameState, grid: newGrid }, oppositeSide)
           : false;
