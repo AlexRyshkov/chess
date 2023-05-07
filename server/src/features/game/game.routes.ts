@@ -16,26 +16,24 @@ const JoinedPlayerSide = {
   [SessionStatus.waitingForBlackPlayer]: Side.BLACK,
 };
 
+const newSessionStatus = {
+  [Side.WHITE]: SessionStatus.waitingForBlackPlayer,
+  [Side.BLACK]: SessionStatus.waitingForWhitePlayer,
+};
+
 router.get(
   "/game/new",
   query("side").notEmpty().isIn(Object.values(SIDE_SELECTION)),
   async (req, res, next) => {
     try {
-      const side = req.query.side;
+      const sideSelection = req.query.side;
 
-      let status: SessionStatus;
-      if (side === SIDE_SELECTION.RANDOM) {
-        status =
-          Math.random() > 0.5
-            ? SessionStatus.waitingForBlackPlayer
-            : SessionStatus.waitingForWhitePlayer;
-      } else {
-        status =
-          side === SIDE_SELECTION.WHITE
-            ? SessionStatus.waitingForBlackPlayer
-            : SessionStatus.waitingForWhitePlayer;
+      let side = sideSelection;
+      if (sideSelection === SIDE_SELECTION.RANDOM) {
+        side = Math.random() > 0.5 ? Side.WHITE : Side.BLACK;
       }
 
+      const status = newSessionStatus[side];
       const session = await Session.query().insert({
         id: nanoid(),
         status,
@@ -48,7 +46,6 @@ router.get(
       });
       socketService.createGameSessionSocket(session);
 
-      console.log(process.env.SECRET_KEY);
       const accessToken = jwt.sign({ side }, process.env.SECRET_KEY);
 
       res.status(200).send({
