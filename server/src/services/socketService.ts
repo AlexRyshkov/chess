@@ -20,6 +20,7 @@ export default class SocketService {
     const gameNamespace = this.ioInstance.of(session.id);
 
     gameNamespace.on("connection", async (socket) => {
+      console.log(socket.handshake.auth);
       console.log(`connected to ${session.id}`);
       const gameState = await GameState.query().findById(session.id);
       socket.emit("state", gameState.data);

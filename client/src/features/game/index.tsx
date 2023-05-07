@@ -17,7 +17,7 @@ const GameContent = () => {
   return (
     <div style={{ display: 'flex', gridGap: 10 }}>
       <Board />
-      Your side: {playerSide.toString()} <br />
+      Your side: {playerSide?.toString()} <br />
       Current turn: {currentSideMove} <br />
       {isMate ? 'Mate!' : isCheck ? 'Check!' : ''} <br />
       {isMate ? (playerSide === currentSideMove ? 'You lost' : 'You win') : ''}

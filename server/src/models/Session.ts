@@ -1,7 +1,8 @@
 import { Model } from "objection";
 
 export enum SessionStatus {
-  waitingForPlayer = "waitingForPlayer",
+  waitingForWhitePlayer = "waitingForWhitePlayer",
+  waitingForBlackPlayer = "waitingForBlackPlayer",
   inGame = "inGame",
   finished = "finished",
 }
@@ -9,7 +10,6 @@ export enum SessionStatus {
 class Session extends Model {
   id: string;
   status: SessionStatus;
-  accessToken: string;
 
   static get tableName(): string {
     return "sessions";

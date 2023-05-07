@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { useDrag } from 'react-dnd';
-import { Figure as FigureType } from '../../features/figures/figure';
+import { Figure as FigureType, Side } from '../../features/figures/figure';
 import { GameContext } from '../../features/game/GameProvider';
 
 const FigureImagesConfig: any = {
-  white: {
+  [Side.WHITE]: {
     Pawn: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg',
     Bishop: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg',
     Knight: 'https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg',
@@ -12,7 +12,7 @@ const FigureImagesConfig: any = {
     Queen: 'https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg',
     King: 'https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg',
   },
-  black: {
+  [Side.BLACK]: {
     Pawn: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg',
     Bishop: 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg',
     Knight: 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg',

@@ -6,11 +6,11 @@ import { FigureItem } from '../../components/Figure';
 import jsonGameStateToClass from '../../jsonGameStateToClass';
 import { Figure, Grid, Side } from '../figures/figure';
 import { createCastlingGrid, createDefaultGrid } from '../grids';
-import getGameSocket from './getGameSocket';
+import connectToGame from './connectToGame';
 
 export const GameContext = createContext<{
   grid: Grid;
-  playerSide: Side;
+  playerSide?: Side;
   currentSideMove: Side;
   isCheck: boolean;
   isMate: boolean;
@@ -52,7 +52,7 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
   const [gameState, setGameState] = useState<GameState>(newGameState);
   const [socket, setSocket] = useState<Socket>();
   const [dragAllowedCells, setDragAllowedCells] = useState<[number, number][]>([]);
-  const [playerSide, setPlayerSide] = useState<Side>(Math.random() > 0.5 ? Side.WHITE : Side.BLACK);
+  const [playerSide, setPlayerSide] = useState<Side>();
   const dragInfo = useDragLayer<FigureItem>((monitor) => monitor.getItem());
 
   const { grid, currentSideMove, history, isCheck, isMate } = gameState;
@@ -64,8 +64,10 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
         return;
       }
 
-      const socket = await getGameSocket(id);
-      console.log(socket);
+      const { socket, playerSide } = await connectToGame(id);
+      if (playerSide) {
+        setPlayerSide(playerSide);
+      }
 
       socket.on('connect', () => {
         console.log('connected to server');

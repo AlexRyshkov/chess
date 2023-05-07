@@ -12,8 +12,8 @@ import {
 export type Grid = (Figure | null)[][];
 
 export enum Side {
-  WHITE = 'white',
-  BLACK = 'black',
+  WHITE = 'White',
+  BLACK = 'Black',
 }
 
 const xSigns = { [Side.WHITE]: 1, [Side.BLACK]: -1 };

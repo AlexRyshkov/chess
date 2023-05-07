@@ -33,5 +33,3 @@ Session.query().then((sessions) => {
     socketService.createGameSessionSocket(session);
   }
 });
-
-console.log(process.env.SECRET_KEY);

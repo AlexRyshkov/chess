@@ -1,29 +1,65 @@
-import crypto from "crypto";
 import express from "express";
+import { query } from "express-validator";
+import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import { createGame } from "src/features/game/GameManager";
 import { socketService } from "src/index";
 import GameState from "src/models/GameState";
 import Session, { SessionStatus } from "src/models/Session";
+import { Side } from "./enums/Side";
+import { SIDE_SELECTION } from "./enums/SideSelection";
 
 const router = express.Router();
 
-router.get("/game/new", async (req, res) => {
-  const side = req.params.side;
-  const session = await Session.query().insert({
-    id: nanoid(),
-    accessToken: crypto.randomBytes(16).toString("base64"),
-  });
+const JoinedPlayerSide = {
+  [SessionStatus.waitingForWhitePlayer]: Side.WHITE,
+  [SessionStatus.waitingForBlackPlayer]: Side.BLACK,
+};
 
-  const gameState = createGame();
-  await GameState.query().insert({ session_id: session.id, data: gameState });
-  socketService.createGameSessionSocket(session);
+router.get(
+  "/game/new",
+  query("side").notEmpty().isIn(Object.values(SIDE_SELECTION)),
+  async (req, res, next) => {
+    try {
+      const side = req.query.side;
 
-  res.status(200).send({
-    id: session.id,
-    accessToken: session.accessToken,
-  });
-});
+      let status: SessionStatus;
+      if (side === SIDE_SELECTION.RANDOM) {
+        status =
+          Math.random() > 0.5
+            ? SessionStatus.waitingForBlackPlayer
+            : SessionStatus.waitingForWhitePlayer;
+      } else {
+        status =
+          side === SIDE_SELECTION.WHITE
+            ? SessionStatus.waitingForBlackPlayer
+            : SessionStatus.waitingForWhitePlayer;
+      }
+
+      const session = await Session.query().insert({
+        id: nanoid(),
+        status,
+      });
+
+      const gameState = createGame();
+      await GameState.query().insert({
+        session_id: session.id,
+        data: gameState,
+      });
+      socketService.createGameSessionSocket(session);
+
+      console.log(process.env.SECRET_KEY);
+      const accessToken = jwt.sign({ side }, process.env.SECRET_KEY);
+
+      res.status(200).send({
+        id: session.id,
+        accessToken,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.get("/game/:id/join", async (req, res, next) => {
   try {
@@ -31,11 +67,14 @@ router.get("/game/:id/join", async (req, res, next) => {
     if (!session) {
       return res.sendStatus(404);
     }
-
-    if (session.status === SessionStatus.waitingForPlayer) {
+    const joinedPlayerSide = JoinedPlayerSide[session.status];
+    if (joinedPlayerSide) {
       await session.$query().update({ status: SessionStatus.inGame });
-
-      return res.status(200).send(session.accessToken);
+      const accessToken = jwt.sign(
+        { side: joinedPlayerSide },
+        process.env.SECRET_KEY
+      );
+      return res.status(200).send({ accessToken });
     } else {
       return res.status(200).send();
     }

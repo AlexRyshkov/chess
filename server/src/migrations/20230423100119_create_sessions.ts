@@ -4,10 +4,14 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("sessions", (tableBuilder) => {
     tableBuilder.string("id").primary();
     tableBuilder
-      .enum("status", ["waitingForPlayer", "inGame", "finished"])
+      .enum("status", [
+        "waitingForWhitePlayer",
+        "waitingForBlackPlayer",
+        "inGame",
+        "finished",
+      ])
       .notNullable()
-      .defaultTo("waitingForPlayer");
-    tableBuilder.string("accessToken").notNullable();
+      .defaultTo("waitingForBlackPlayer");
   });
 }
 
