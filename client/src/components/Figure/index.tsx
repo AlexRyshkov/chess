@@ -1,7 +1,7 @@
-import React, {useContext} from 'react';
-import {useDrag} from 'react-dnd';
-import {Figure as FigureType} from '../../features/figures/figure';
-import {GameContext} from '../../features/game/GameProvider';
+import { useContext } from 'react';
+import { useDrag } from 'react-dnd';
+import { Figure as FigureType } from '../../features/figures/figure';
+import { GameContext } from '../../features/game/GameProvider';
 
 const FigureImagesConfig: any = {
   white: {
@@ -36,7 +36,5 @@ export default function Figure({ figure, x, y }: { figure: FigureType; x: number
     [figure, x, y, currentSideMove, playerSide],
   );
 
-  return (
-    <img width='100%' ref={drag} src={FigureImagesConfig[figure.side][figure.name]} />
-  );
+  return <img width='100%' ref={drag} src={FigureImagesConfig[figure.side][figure.name]} />;
 }

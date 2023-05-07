@@ -9,6 +9,7 @@ import Session, { SessionStatus } from "src/models/Session";
 const router = express.Router();
 
 router.get("/game/new", async (req, res) => {
+  const side = req.params.side;
   const session = await Session.query().insert({
     id: nanoid(),
     accessToken: crypto.randomBytes(16).toString("base64"),

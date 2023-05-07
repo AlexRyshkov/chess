@@ -1,17 +1,15 @@
-import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {HTML5Backend} from 'react-dnd-html5-backend';
-import {DndProvider} from 'react-dnd';
-import GameProvider from './features/game/GameProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <>
     <DndProvider backend={HTML5Backend}>
-        <App />
+      <App />
     </DndProvider>
   </>,
 );

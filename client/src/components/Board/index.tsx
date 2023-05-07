@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import { useContext } from 'react';
+import { GameContext } from '../../features/game/GameProvider';
 import Cell from './Cell';
-import {GameContext} from '../../features/game/GameProvider';
 
 const Board = () => {
   const { grid } = useContext(GameContext);
