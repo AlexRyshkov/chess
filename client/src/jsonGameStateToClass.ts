@@ -1,4 +1,15 @@
-import { Bishop, King, Knight, Pawn, Queen, Rook } from './features/figures/figure';
+import { Bishop, Figure, King, Knight, Pawn, Queen, Rook } from './features/figures/figure';
+
+export const objectToFigure = (object: Figure): Figure | null => {
+  if (object?.name === 'Pawn') return new Pawn(object.side);
+  if (object?.name === 'Rook') return new Rook(object.side);
+  if (object?.name === 'Knight') return new Knight(object.side);
+  if (object?.name === 'Bishop') return new Bishop(object.side);
+  if (object?.name === 'Queen') return new Queen(object.side);
+  if (object?.name === 'King') return new King(object.side);
+
+  return null;
+};
 
 export default function (gameState: any) {
   const { grid } = gameState;
@@ -10,12 +21,7 @@ export default function (gameState: any) {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid.length; j++) {
       if (grid[i][j] !== null) {
-        if (grid[i][j]?.name === 'Pawn') newGrid[i][j] = new Pawn(grid[i][j].side);
-        if (grid[i][j]?.name === 'Rook') newGrid[i][j] = new Rook(grid[i][j]!.side);
-        if (grid[i][j]?.name === 'Knight') newGrid[i][j] = new Knight(grid[i][j]!.side);
-        if (grid[i][j]?.name === 'Bishop') newGrid[i][j] = new Bishop(grid[i][j]!.side);
-        if (grid[i][j]?.name === 'Queen') newGrid[i][j] = new Queen(grid[i][j]!.side);
-        if (grid[i][j]?.name === 'King') newGrid[i][j] = new King(grid[i][j]!.side);
+        newGrid[i][j] = objectToFigure(grid[i][j]);
       }
     }
   }
