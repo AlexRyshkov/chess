@@ -6,8 +6,8 @@ import { createGame } from "src/features/game/GameManager";
 import { socketService } from "src/index";
 import GameState from "src/models/GameState";
 import Session, { SessionStatus } from "src/models/Session";
-import { Side } from "./enums/Side";
-import { SIDE_SELECTION } from "./enums/SideSelection";
+import SIDE_SELECTION from "src/shared/enums/selectionSide";
+import Side from "src/shared/enums/side";
 
 const router = express.Router();
 

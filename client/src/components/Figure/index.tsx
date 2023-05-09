@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useDrag } from 'react-dnd';
-import { Figure as FigureType, Side } from '../../features/figures/figure';
+import Side from 'shared/enums/side';
+import FigureType from 'shared/figures/Figure';
 import { GameContext } from '../../features/game/GameProvider';
 
 const FigureImagesConfig: any = {

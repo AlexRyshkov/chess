@@ -1,7 +1,7 @@
 import { Box, Button, Paper, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { SIDE_SELECTION } from 'enums/sideSelection';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import SIDE_SELECTION from 'shared/enums/selectionSide';
 import { createNewGame } from '../../services/api/game';
 
 const StartMenu = () => {

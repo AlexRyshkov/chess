@@ -1,4 +1,4 @@
-import { SIDE_SELECTION } from 'enums/sideSelection';
+import SIDE_SELECTION from 'shared/enums/selectionSide';
 import api from './index';
 
 export const createNewGame = (side: SIDE_SELECTION) =>

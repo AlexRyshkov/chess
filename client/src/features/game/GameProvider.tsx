@@ -1,11 +1,13 @@
 import { createContext, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useDragLayer } from 'react-dnd';
 import { useParams } from 'react-router';
+import Side from 'shared/enums/side';
+import GameState from 'shared/types/GameState';
+import Grid from 'shared/types/Grid';
+import History from 'shared/types/History';
 import { Socket } from 'socket.io-client';
 import { FigureItem } from '../../components/Figure';
-import jsonGameStateToClass from '../../jsonGameStateToClass';
-import { Figure, Grid, Side } from '../figures/figure';
-import { createCastlingGrid, createDefaultGrid } from '../grids';
+import jsonGameStateToClass from '../../shared/utils/gameStateObjectToClass';
 import connectToGame from './connectToGame';
 
 export const GameContext = createContext<{
@@ -18,7 +20,7 @@ export const GameContext = createContext<{
   dragAllowedCells: [number, number][];
   makeMove: (from: [number, number], to: [number, number]) => void;
 }>({
-  grid: createDefaultGrid(),
+  grid: [],
   currentSideMove: Side.WHITE,
   playerSide: Side.WHITE,
   isCheck: false,
@@ -30,18 +32,8 @@ export const GameContext = createContext<{
   },
 });
 
-export type History = { figure: Figure; from: [number, number]; to: [number, number] }[];
-
-export type GameState = {
-  grid: Grid;
-  currentSideMove: Side;
-  isCheck: boolean;
-  isMate: boolean;
-  history: History;
-};
-
 const newGameState: GameState = {
-  grid: createCastlingGrid(),
+  grid: [],
   currentSideMove: Side.WHITE,
   history: [],
   isCheck: false,

@@ -1,12 +1,12 @@
-import { Side } from "src/features/game/enums/Side";
-import { Bishop } from "src/features/game/figures/Bishop";
-import { King } from "src/features/game/figures/King";
-import { Knight } from "src/features/game/figures/Knight";
-import { Pawn } from "src/features/game/figures/Pawn";
-import { Queen } from "src/features/game/figures/Queen";
-import { Rook } from "src/features/game/figures/Rook";
-import { GameState } from "src/features/game/types/GameState";
-import { Grid } from "src/features/game/types/Grid";
+import Side from "src/shared/enums/side";
+import Bishop from "src/shared/figures/Bishop";
+import King from "src/shared/figures/King";
+import Knight from "src/shared/figures/Knight";
+import Pawn from "src/shared/figures/Pawn";
+import Queen from "src/shared/figures/Queen";
+import Rook from "src/shared/figures/Rook";
+import GameState from "src/shared/types/GameState";
+import Grid from "src/shared/types/Grid";
 
 export function createGame(): GameState {
   return {

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useDrop } from 'react-dnd';
-import { Grid } from '../../../features/figures/figure';
+import Grid from 'shared/types/Grid';
 import { GameContext } from '../../../features/game/GameProvider';
 import Figure, { FigureItem } from '../../Figure';
 

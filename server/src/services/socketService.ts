@@ -1,9 +1,9 @@
 import { Namespace, Server } from "socket.io";
-import { Side } from "src/features/game/enums/Side";
-import { calcIsCheck, calcIsMate } from "src/features/game/figures/calcMoves";
-import jsonGameStateToClass from "src/jsonGameStateToClass";
 import GameState from "src/models/GameState";
 import Session from "src/models/Session";
+import Side from "src/shared/enums/side";
+import { calcIsCheck, calcIsMate } from "src/shared/logic/calcMoves";
+import gameStateObjectToClass from "src/shared/utils/gameStateObjectToClass";
 
 export default class SocketService {
   private ioInstance: Server;
@@ -29,7 +29,7 @@ export default class SocketService {
         const { fromX, fromY, toX, toY } = message;
 
         const gameStateRecord = await GameState.query().findById(session.id);
-        const gameState = jsonGameStateToClass(gameStateRecord.data);
+        const gameState = gameStateObjectToClass(gameStateRecord.data);
         const { grid, currentSideMove } = gameState;
         const figure = grid[fromX][fromY];
 
