@@ -64,7 +64,6 @@ export default class King extends Figure {
     const filteredByCastling = moves.filter(([, moveY]) => {
       // castling move
       if (Math.abs(moveY - y) === 2) {
-        console.log(moveY);
         return moves.some(([, y]) => Math.abs(moveY - y) === 1);
       }
       return true;

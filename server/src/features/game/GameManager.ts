@@ -8,14 +8,36 @@ import Rook from "src/shared/figures/Rook";
 import GameState from "src/shared/types/GameState";
 import Grid from "src/shared/types/Grid";
 
-export function createGame(): GameState {
-  return {
+export function createGameState(): GameState {
+  const gameState = {
     grid: createDefaultGrid(),
     currentSideMove: Side.WHITE,
+    allowedMoves: {},
     history: [],
     isCheck: false,
     isMate: false,
   };
+
+  return {
+    ...gameState,
+    allowedMoves: getAllowedMoves(gameState, gameState.currentSideMove),
+  };
+}
+
+export function getAllowedMoves(
+  gameState: GameState,
+  side: Side
+): { [key: string]: [number, number][] } {
+  let result = {};
+  for (let i = 0; i < gameState.grid.length; i++) {
+    for (let j = 0; j < gameState.grid.length; j++) {
+      const figure = gameState.grid[i][j];
+      if (figure !== null && figure.side === side) {
+        result[`[${i}, ${j}]`] = figure.getAllowedMoves(gameState, i, j);
+      }
+    }
+  }
+  return result;
 }
 
 export function createDefaultGrid(): Grid {

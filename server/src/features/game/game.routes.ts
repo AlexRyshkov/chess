@@ -2,7 +2,7 @@ import express from "express";
 import { query } from "express-validator";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
-import { createGame } from "src/features/game/GameManager";
+import { createGameState } from "src/features/game/GameManager";
 import { socketService } from "src/index";
 import GameState from "src/models/GameState";
 import Session, { SessionStatus } from "src/models/Session";
@@ -39,7 +39,7 @@ router.get(
         status,
       });
 
-      const gameState = createGame();
+      const gameState = createGameState();
       await GameState.query().insert({
         session_id: session.id,
         data: gameState,

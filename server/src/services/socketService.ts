@@ -1,4 +1,5 @@
 import { Namespace, Server } from "socket.io";
+import { getAllowedMoves } from "src/features/game/GameManager";
 import GameState from "src/models/GameState";
 import Session from "src/models/Session";
 import Side from "src/shared/enums/side";
@@ -66,7 +67,7 @@ export default class SocketService {
           ? calcIsMate({ ...gameState, grid: newGrid }, oppositeSide)
           : false;
 
-        const newGameState = {
+        let newGameState: any = {
           grid: newGrid,
           currentSideMove: oppositeSide,
           isCheck,
@@ -75,6 +76,13 @@ export default class SocketService {
             ...gameState.history,
             { from: [fromX, fromY], to: [toX, toY], figure: figure },
           ],
+        };
+        newGameState = {
+          ...newGameState,
+          allowedMoves: getAllowedMoves(
+            newGameState,
+            newGameState.currentSideMove
+          ),
         };
 
         await GameState.query()
@@ -93,7 +101,6 @@ export default class SocketService {
 // gameNamespace.use((socket, next) => {
 //     const token = socket.handshake.auth.token;
 //     if (token === session.access_token) {
-//         console.log(999);
 //         next();
 //     }
 //     next(new Error("invalid token"));

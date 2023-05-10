@@ -4,7 +4,17 @@ import Grid from 'shared/types/Grid';
 import { GameContext } from '../../../features/game/GameProvider';
 import Figure, { FigureItem } from '../../Figure';
 
-function Cell({ grid, x, y }: { grid: Grid; x: number; y: number }) {
+function Cell({
+  grid,
+  x,
+  y,
+  isHighlighted,
+}: {
+  grid: Grid;
+  x: number;
+  y: number;
+  isHighlighted: boolean;
+}) {
   const { dragAllowedCells, makeMove } = useContext(GameContext);
   const figure = grid[x][y];
   const isAllowedToMove = dragAllowedCells.some(([x1, y1]) => x === x1 && y === y1);
@@ -23,6 +33,7 @@ function Cell({ grid, x, y }: { grid: Grid; x: number; y: number }) {
       ref={drop}
       style={{
         background: (x + y) % 2 === 0 ? 'white' : 'grey',
+        ...(isHighlighted && { background: 'green' }),
         ...(isAllowedToMove && { background: 'yellow' }),
       }}
     >

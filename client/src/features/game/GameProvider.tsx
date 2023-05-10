@@ -1,4 +1,4 @@
-import { createContext, ReactElement, useCallback, useEffect, useState } from 'react';
+import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDragLayer } from 'react-dnd';
 import { useParams } from 'react-router';
 import Side from 'shared/enums/side';
@@ -7,6 +7,7 @@ import Grid from 'shared/types/Grid';
 import History from 'shared/types/History';
 import { Socket } from 'socket.io-client';
 import { FigureItem } from '../../components/Figure';
+import pieceMoveSound from '../../piece-move-sound.mp3';
 import jsonGameStateToClass from '../../shared/utils/gameStateObjectToClass';
 import connectToGame from './connectToGame';
 
@@ -35,6 +36,7 @@ export const GameContext = createContext<{
 const newGameState: GameState = {
   grid: [],
   currentSideMove: Side.WHITE,
+  allowedMoves: {},
   history: [],
   isCheck: false,
   isMate: false,
@@ -46,6 +48,8 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
   const [dragAllowedCells, setDragAllowedCells] = useState<[number, number][]>([]);
   const [playerSide, setPlayerSide] = useState<Side>();
   const dragInfo = useDragLayer<FigureItem>((monitor) => monitor.getItem());
+
+  const audio = useMemo(() => new Audio(pieceMoveSound), []);
 
   const { grid, currentSideMove, history, isCheck, isMate } = gameState;
   const { id } = useParams();
@@ -66,6 +70,7 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
       });
 
       socket.on('state', (data) => {
+        audio.play();
         setGameState(jsonGameStateToClass(data));
       });
 
@@ -86,7 +91,7 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     if (dragInfo?.figure) {
-      setDragAllowedCells(dragInfo.figure.getAllowedMoves(gameState, dragInfo.x, dragInfo.y));
+      setDragAllowedCells(gameState.allowedMoves[`[${dragInfo.x}, ${dragInfo.y}]`]);
     } else {
       setDragAllowedCells([]);
     }
@@ -95,6 +100,7 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
       socket?.emit('move', { fromX, fromY, toX, toY }, (gameState: any) => {
+        audio.play();
         setGameState(jsonGameStateToClass(gameState));
       });
     },

@@ -20,7 +20,6 @@ export default async function (gameId: string): Promise<{ socket: Socket; player
   if (token) {
     const payload = jwt_decode<{ side: Side }>(token);
     playerSide = payload.side;
-    console.log(payload);
   }
   return { socket, playerSide };
 }
