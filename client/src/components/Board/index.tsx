@@ -9,6 +9,7 @@ const BoardContainer = styled('div')`
   height: 700px;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   grid-template-rows: repeat(8, minmax(0, 1fr));
+  border: 3px solid black;
 `;
 
 interface Props {
