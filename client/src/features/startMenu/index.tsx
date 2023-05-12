@@ -17,7 +17,9 @@ const StartMenu = () => {
   };
 
   const handleSide = (event: React.MouseEvent<HTMLElement>, newSide: SIDE_SELECTION) => {
-    setSide(newSide);
+    if (newSide !== null) {
+      setSide(newSide);
+    }
   };
 
   return (
