@@ -5,14 +5,15 @@ import { joinGame } from '../../services/api/game';
 import { createGameSocket } from '../../services/socket';
 
 export default async function (gameId: string): Promise<{ socket: Socket; playerSide?: Side }> {
-  let token = sessionStorage.getItem(gameId);
+  let token = localStorage.getItem(gameId);
+  console.log(token);
   if (!token) {
     const {
       data: { accessToken },
     } = await joinGame(gameId);
     token = accessToken;
     if (token) {
-      sessionStorage.setItem(gameId, token);
+      localStorage.setItem(gameId, token);
     }
   }
   const socket = await createGameSocket(gameId, token);

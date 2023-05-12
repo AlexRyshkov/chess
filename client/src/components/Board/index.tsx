@@ -5,8 +5,10 @@ import Cell from './Cell';
 
 const BoardContainer = styled('div')`
   display: grid;
-  grid-template-columns: repeat(8, 100px);
-  grid-template-rows: repeat(8, 100px);
+  width: 700px;
+  height: 700px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(0, 1fr));
 `;
 
 interface Props {
@@ -23,7 +25,7 @@ const Board = ({ grid, highlightedCells, flipped }: Props) => {
 
       cells.push(
         <Cell
-          grid={grid}
+          figure={grid[x][y]}
           key={`${x}${y}`}
           x={x}
           y={y}

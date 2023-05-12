@@ -1,11 +1,9 @@
 import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDragLayer } from 'react-dnd';
 import { useParams } from 'react-router';
 import { Socket } from 'socket.io-client';
 import GameState from 'types/GameState';
 import Grid from 'types/Grid';
-import { FigureItem } from '../../components/Figure';
 import pieceMoveSound from '../../piece-move-sound.mp3';
 import History from '../../types/History';
 import connectToGame from './connectToGame';
@@ -17,7 +15,7 @@ export const GameContext = createContext<{
   isCheck: boolean;
   isMate: boolean;
   history: History;
-  dragAllowedCells: [number, number][];
+  allowedMoves: any;
   makeMove: (from: [number, number], to: [number, number]) => void;
 }>({
   grid: [],
@@ -26,7 +24,7 @@ export const GameContext = createContext<{
   isCheck: false,
   isMate: false,
   history: [],
-  dragAllowedCells: [],
+  allowedMoves: {},
   makeMove: () => {
     return;
   },
@@ -44,9 +42,7 @@ const newGameState: GameState = {
 const GameProvider = ({ children }: { children: ReactElement }) => {
   const [gameState, setGameState] = useState<GameState>(newGameState);
   const [socket, setSocket] = useState<Socket>();
-  const [dragAllowedCells, setDragAllowedCells] = useState<[number, number][]>([]);
   const [playerSide, setPlayerSide] = useState<Side>();
-  const dragInfo = useDragLayer<FigureItem>((monitor) => monitor.getItem());
 
   const audio = useMemo(() => new Audio(pieceMoveSound), []);
 
@@ -88,14 +84,6 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
     })();
   }, [id]);
 
-  useEffect(() => {
-    if (dragInfo?.figure) {
-      setDragAllowedCells(gameState.allowedMoves[`[${dragInfo.x}, ${dragInfo.y}]`]);
-    } else {
-      setDragAllowedCells([]);
-    }
-  }, [dragInfo]);
-
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
       socket?.emit('move', { fromX, fromY, toX, toY }, (data: GameState) => {
@@ -103,20 +91,20 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
         setGameState(data);
       });
     },
-    [gameState, socket],
+    [audio, gameState, socket],
   );
 
   return (
     <GameContext.Provider
       value={{
         grid,
-        dragAllowedCells,
         makeMove,
         currentSideMove,
         history,
         isCheck,
         isMate,
         playerSide,
+        allowedMoves: gameState.allowedMoves,
       }}
     >
       {children}

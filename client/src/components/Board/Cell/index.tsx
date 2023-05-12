@@ -1,39 +1,45 @@
+import Figure from 'components/Figure';
 import { useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import type FigureType from 'types/Figure';
-import Grid from 'types/Grid';
 import { GameContext } from '../../../features/game/GameProvider';
-import Figure from '../../Figure';
 
-export type FigureItem = { figure: FigureType; x: number; y: number };
-
-interface Props {
-  grid: Grid;
+export type FigureItem = {
+  figure: FigureType;
   x: number;
   y: number;
-  isHighlighted: boolean;
+  allowedCells: [number, number][];
+};
+
+interface Props {
+  figure: FigureType | null;
+  x: number;
+  y: number;
+  isHighlighted?: boolean;
 }
 
-function Cell({ grid, x, y, isHighlighted }: Props) {
-  const { dragAllowedCells, makeMove, currentSideMove, playerSide } = useContext(GameContext);
-  const figure = grid[x][y];
-  const isAllowedToMove = dragAllowedCells?.some(([x1, y1]) => x === x1 && y === y1);
-
-  const [, drop] = useDrop(
-    () => ({
-      accept: 'Figure',
-      canDrop: () => isAllowedToMove,
-      drop: (item: FigureItem) => makeMove([item.x, item.y], [x, y]),
-    }),
-    [isAllowedToMove, makeMove],
-  );
+function Cell({ figure, x, y, isHighlighted }: Props) {
+  const { makeMove, allowedMoves } = useContext(GameContext);
 
   const [, drag] = useDrag(
     () => ({
       type: 'Figure',
-      item: { figure, x, y },
+      item: { figure, x, y, allowedCells: allowedMoves[`[${x}, ${y}]`] },
     }),
-    [figure, x, y, currentSideMove, playerSide],
+    [figure, x, y, allowedMoves],
+  );
+
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: 'Figure',
+      canDrop: (item: FigureItem) => item.allowedCells?.some(([x1, y1]) => x === x1 && y === y1),
+      drop: (item: FigureItem) => makeMove([item.x, item.y], [x, y]),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    }),
+    [makeMove],
   );
 
   return (
@@ -42,7 +48,8 @@ function Cell({ grid, x, y, isHighlighted }: Props) {
       style={{
         background: (x + y) % 2 === 0 ? 'white' : 'grey',
         ...(isHighlighted && { background: 'green' }),
-        ...(isAllowedToMove && { background: 'yellow' }),
+        ...(!isOver && canDrop && { background: 'yellow' }),
+        ...(isOver && canDrop && { background: 'blue' }),
       }}
     >
       {figure && <Figure figure={figure} ref={drag} />}

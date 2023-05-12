@@ -13,7 +13,7 @@ const StartMenu = () => {
     const {
       data: { id, accessToken },
     } = await createNewGame(side);
-    sessionStorage.setItem(id, accessToken);
+    localStorage.setItem(id, accessToken);
     navigate(`/game/${id}`);
   };
 
