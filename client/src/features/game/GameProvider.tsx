@@ -1,14 +1,13 @@
+import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDragLayer } from 'react-dnd';
 import { useParams } from 'react-router';
-import Side from 'shared/enums/side';
-import GameState from 'shared/types/GameState';
-import Grid from 'shared/types/Grid';
-import History from 'shared/types/History';
 import { Socket } from 'socket.io-client';
+import GameState from 'types/GameState';
+import Grid from 'types/Grid';
 import { FigureItem } from '../../components/Figure';
 import pieceMoveSound from '../../piece-move-sound.mp3';
-import jsonGameStateToClass from '../../shared/utils/gameStateObjectToClass';
+import History from '../../types/History';
 import connectToGame from './connectToGame';
 
 export const GameContext = createContext<{
@@ -69,9 +68,9 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
         console.log('connected to server');
       });
 
-      socket.on('state', (data) => {
+      socket.on('state', (data: GameState) => {
         audio.play();
-        setGameState(jsonGameStateToClass(data));
+        setGameState(data);
       });
 
       socket.on('disconnect', (reason) => {
@@ -99,9 +98,9 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
 
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
-      socket?.emit('move', { fromX, fromY, toX, toY }, (gameState: any) => {
+      socket?.emit('move', { fromX, fromY, toX, toY }, (data: GameState) => {
         audio.play();
-        setGameState(jsonGameStateToClass(gameState));
+        setGameState(data);
       });
     },
     [gameState, socket],

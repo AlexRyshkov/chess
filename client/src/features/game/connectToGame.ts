@@ -1,5 +1,5 @@
+import Side from 'enums/Side';
 import jwt_decode from 'jwt-decode';
-import Side from 'shared/enums/side';
 import { Socket } from 'socket.io-client';
 import { joinGame } from '../../services/api/game';
 import { createGameSocket } from '../../services/socket';

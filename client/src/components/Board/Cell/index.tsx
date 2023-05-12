@@ -1,31 +1,39 @@
 import { useContext } from 'react';
-import { useDrop } from 'react-dnd';
-import Grid from 'shared/types/Grid';
+import { useDrag, useDrop } from 'react-dnd';
+import type FigureType from 'types/Figure';
+import Grid from 'types/Grid';
 import { GameContext } from '../../../features/game/GameProvider';
-import Figure, { FigureItem } from '../../Figure';
+import Figure from '../../Figure';
 
-function Cell({
-  grid,
-  x,
-  y,
-  isHighlighted,
-}: {
+export type FigureItem = { figure: FigureType; x: number; y: number };
+
+interface Props {
   grid: Grid;
   x: number;
   y: number;
   isHighlighted: boolean;
-}) {
-  const { dragAllowedCells, makeMove } = useContext(GameContext);
-  const figure = grid[x][y];
-  const isAllowedToMove = dragAllowedCells.some(([x1, y1]) => x === x1 && y === y1);
+}
 
-  const [_, drop] = useDrop(
+function Cell({ grid, x, y, isHighlighted }: Props) {
+  const { dragAllowedCells, makeMove, currentSideMove, playerSide } = useContext(GameContext);
+  const figure = grid[x][y];
+  const isAllowedToMove = dragAllowedCells?.some(([x1, y1]) => x === x1 && y === y1);
+
+  const [, drop] = useDrop(
     () => ({
       accept: 'Figure',
       canDrop: () => isAllowedToMove,
       drop: (item: FigureItem) => makeMove([item.x, item.y], [x, y]),
     }),
     [isAllowedToMove, makeMove],
+  );
+
+  const [, drag] = useDrag(
+    () => ({
+      type: 'Figure',
+      item: { figure, x, y },
+    }),
+    [figure, x, y, currentSideMove, playerSide],
   );
 
   return (
@@ -37,7 +45,7 @@ function Cell({
         ...(isAllowedToMove && { background: 'yellow' }),
       }}
     >
-      {figure && <Figure figure={figure} x={x} y={y} />}
+      {figure && <Figure figure={figure} ref={drag} />}
     </div>
   );
 }

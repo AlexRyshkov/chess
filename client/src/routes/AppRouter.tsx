@@ -1,6 +1,6 @@
-import PageLoader from 'features/routes/PageLoader';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import PageLoader from 'routes/PageLoader';
 
 const Game = lazy(() => import('features/game'));
 const StartMenu = lazy(() => import('features/startMenu'));

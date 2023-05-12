@@ -1,12 +1,13 @@
 import { Box, Button, Paper, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import CenteredContainer from 'components/CenteredContainer';
+import SideSelection from 'enums/SideSelection';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import SIDE_SELECTION from 'shared/enums/selectionSide';
 import { createNewGame } from '../../services/api/game';
 
 const StartMenu = () => {
   const navigate = useNavigate();
-  const [side, setSide] = useState<SIDE_SELECTION>(SIDE_SELECTION.WHITE);
+  const [side, setSide] = useState<SideSelection>(SideSelection.WHITE);
 
   const startGame = async () => {
     const {
@@ -16,14 +17,14 @@ const StartMenu = () => {
     navigate(`/game/${id}`);
   };
 
-  const handleSide = (event: React.MouseEvent<HTMLElement>, newSide: SIDE_SELECTION) => {
+  const handleSide = (event: React.MouseEvent<HTMLElement>, newSide: SideSelection) => {
     if (newSide !== null) {
       setSide(newSide);
     }
   };
 
   return (
-    <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
+    <CenteredContainer>
       <Paper elevation={3}>
         <Box padding={2} display='flex' alignItems='center' flexDirection='column' rowGap={2}>
           <Typography variant='h5'>Create new game</Typography>
@@ -34,9 +35,9 @@ const StartMenu = () => {
             onChange={handleSide}
             aria-label='text alignment'
           >
-            <ToggleButton value={SIDE_SELECTION.WHITE}>White</ToggleButton>
-            <ToggleButton value={SIDE_SELECTION.BLACK}>Black</ToggleButton>
-            <ToggleButton value={SIDE_SELECTION.RANDOM}>Random</ToggleButton>
+            <ToggleButton value={SideSelection.WHITE}>White</ToggleButton>
+            <ToggleButton value={SideSelection.BLACK}>Black</ToggleButton>
+            <ToggleButton value={SideSelection.RANDOM}>Random</ToggleButton>
           </ToggleButtonGroup>
 
           <Button variant='contained' onClick={startGame}>
@@ -44,7 +45,7 @@ const StartMenu = () => {
           </Button>
         </Box>
       </Paper>
-    </Box>
+    </CenteredContainer>
   );
 };
 

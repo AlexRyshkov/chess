@@ -1,4 +1,4 @@
-import Figure from "../figures/Figure";
+import Figure from './Figure';
 
 type History = {
   figure: Figure;
