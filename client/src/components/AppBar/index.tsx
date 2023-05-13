@@ -5,14 +5,14 @@ const AppBar = () => {
   const navigate = useNavigate();
 
   return (
-    <MuiAppBar>
+    <MuiAppBar position='static'>
       <Toolbar>
-        <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-          Chess app
-        </Typography>
-        <Button color='inherit' onClick={() => navigate('/')}>
+        <Button sx={{ flexGrow: 1 }} color='inherit' onClick={() => navigate('/')}>
           New game
         </Button>
+        <Typography variant='h6' component='div'>
+          Chess app
+        </Typography>
       </Toolbar>
     </MuiAppBar>
   );

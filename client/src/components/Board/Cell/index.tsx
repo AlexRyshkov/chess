@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import Figure from 'components/Figure';
 import { useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -43,17 +44,28 @@ function Cell({ figure, x, y, isHighlighted }: Props) {
   );
 
   return (
-    <div
-      ref={drop}
-      style={{
-        background: (x + y) % 2 === 0 ? 'white' : 'grey',
-        ...(isHighlighted && { background: 'green' }),
-        ...(!isOver && canDrop && { background: 'yellow' }),
-        ...(isOver && canDrop && { background: 'blue' }),
-      }}
-    >
+    <Box ref={drop} position='relative' bgcolor={(x + y) % 2 === 0 ? '#f0d9b5' : '#b58863'}>
+      {!isOver && canDrop && (
+        <Box
+          width='100%'
+          height='100%'
+          position='absolute'
+          sx={{
+            background:
+              figure !== null
+                ? 'radial-gradient(transparent 0%, transparent 79%, rgba(20, 85, 0, 0.3) 80%)'
+                : 'radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%)',
+          }}
+        />
+      )}
+      {isOver && canDrop && (
+        <Box position='absolute' width='100%' height='100%' bgcolor='rgba(155,199,0,.41)' />
+      )}
+      {isHighlighted && (
+        <Box position='absolute' width='100%' height='100%' bgcolor='rgba(155,199,0,.41)' />
+      )}
       {figure && <Figure figure={figure} ref={drag} />}
-    </div>
+    </Box>
   );
 }
 

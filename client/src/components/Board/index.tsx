@@ -5,11 +5,10 @@ import Cell from './Cell';
 
 const BoardContainer = styled('div')`
   display: grid;
-  width: 700px;
-  height: 700px;
+  width: 100%;
+  height: 100%;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   grid-template-rows: repeat(8, minmax(0, 1fr));
-  border: 3px solid black;
 `;
 
 interface Props {
@@ -23,6 +22,10 @@ const Board = ({ grid, highlightedCells, flipped }: Props) => {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid.length; j++) {
       const [x, y] = [flipped ? flipCoord(i) : i, flipped ? flipCoord(j) : j];
+
+      if (highlightedCells?.some(([x1, y1]) => x1 === x && y1 === y)) {
+        console.log(x, y, grid[x][y]);
+      }
 
       cells.push(
         <Cell
