@@ -31,7 +31,19 @@ export default class SocketService {
 
         const gameStateRecord = await GameState.query().findById(session.id);
         const gameState = gameStateObjectToClass(gameStateRecord.data);
-        const { grid, currentSideMove } = gameState;
+        const { grid, currentSideMove, allowedMoves } = gameState;
+
+        if (
+          !allowedMoves[`[${fromX}, ${fromY}]`].some(
+            ([x, y]) => x === toX && y === toY
+          )
+        ) {
+          console.error(
+            `move from (${fromX}, ${fromY}) to (${toX}, ${toY}) not allowed`
+          );
+          return;
+        }
+
         const figure = grid[fromX][fromY];
 
         const newGrid = grid.map((row) => row.slice());
