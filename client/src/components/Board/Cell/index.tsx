@@ -64,7 +64,7 @@ function Cell({ figure, x, y, isHighlighted }: Props) {
       {isHighlighted && (
         <Box position='absolute' width='100%' height='100%' bgcolor='rgba(155,199,0,.41)' />
       )}
-      {figure && <Figure figure={figure} ref={drag} />}
+      {figure && <Figure figure={figure} ref={drag} width='100%' height='100%' />}
     </Box>
   );
 }

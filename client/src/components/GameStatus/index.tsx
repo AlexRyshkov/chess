@@ -22,7 +22,7 @@ const GameStatus = ({ playerSide, currentSideMove, isCheck, isMate }: Props) => 
         <Typography variant='body1'>
           {isPlayerTurn ? 'Your turn' : 'Waiting for opponent turn'}
         </Typography>
-        {isCheck && (
+        {isPlayerTurn && isCheck && (
           <Typography color={theme.palette.error.main} variant='body1'>
             Check!
           </Typography>

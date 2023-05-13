@@ -1,4 +1,4 @@
-import { AppBar as MuiAppBar, Button, Toolbar, Typography } from '@mui/material';
+import { AppBar as MuiAppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const AppBar = () => {
@@ -7,9 +7,10 @@ const AppBar = () => {
   return (
     <MuiAppBar position='static'>
       <Toolbar>
-        <Button sx={{ flexGrow: 1 }} color='inherit' onClick={() => navigate('/')}>
+        <Button color='inherit' onClick={() => navigate('/')}>
           New game
         </Button>
+        <Box flex={1} />
         <Typography variant='h6' component='div'>
           Chess app
         </Typography>

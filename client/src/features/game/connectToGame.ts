@@ -6,7 +6,6 @@ import { createGameSocket } from '../../services/socket';
 
 export default async function (gameId: string): Promise<{ socket: Socket; playerSide?: Side }> {
   let token = localStorage.getItem(gameId);
-  console.log(token);
   if (!token) {
     const {
       data: { accessToken },

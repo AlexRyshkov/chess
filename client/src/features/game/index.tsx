@@ -1,4 +1,4 @@
-import { Box, Paper, styled, useTheme } from '@mui/material';
+import { Box, Stack, styled, useTheme } from '@mui/material';
 import GameStatus from 'components/GameStatus';
 import History from 'components/History';
 import Side from 'enums/Side';
@@ -28,7 +28,6 @@ const BoardContainer = styled(Box)<{ size: number }>`
 const GameContent = () => {
   const { playerSide, grid, history, currentSideMove, isCheck, isMate } = useContext(GameContext);
 
-  console.log(grid);
   const { width, height } = useWindowDimensions();
   const theme = useTheme();
   const lastMove = history[history.length - 1];
@@ -47,17 +46,19 @@ const GameContent = () => {
           highlightedCells={lastMove ? [lastMove.from, lastMove.to] : []}
         />
       </BoardContainer>
-      <Paper elevation={3} sx={{ padding: theme.spacing(2) }}>
-        <GameStatus
-          playerSide={playerSide}
-          currentSideMove={currentSideMove}
-          isCheck={isCheck}
-          isMate={isMate}
-        />
-        <Box overflow='hidden' height='80%'>
-          <History />
+      <Stack width={320} spacing={1}>
+        <Box height='50%'>
+          <History history={history} />
         </Box>
-      </Paper>
+        <Box>
+          <GameStatus
+            playerSide={playerSide}
+            currentSideMove={currentSideMove}
+            isCheck={isCheck}
+            isMate={isMate}
+          />
+        </Box>
+      </Stack>
     </Box>
   );
 };

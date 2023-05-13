@@ -23,10 +23,6 @@ const Board = ({ grid, highlightedCells, flipped }: Props) => {
     for (let j = 0; j < grid.length; j++) {
       const [x, y] = [flipped ? flipCoord(i) : i, flipped ? flipCoord(j) : j];
 
-      if (highlightedCells?.some(([x1, y1]) => x1 === x && y1 === y)) {
-        console.log(x, y, grid[x][y]);
-      }
-
       cells.push(
         <Cell
           figure={grid[x][y]}
