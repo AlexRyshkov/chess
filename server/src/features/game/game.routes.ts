@@ -6,7 +6,7 @@ import { createGameState } from "src/features/game/GameManager";
 import { socketService } from "src/index";
 import GameState from "src/models/GameState";
 import Session, { SessionStatus } from "src/models/Session";
-import SIDE_SELECTION from "src/shared/enums/selectionSide";
+import SelectionSide from "src/shared/enums/selectionSide";
 import Side from "src/shared/enums/side";
 
 const router = express.Router();
@@ -23,13 +23,13 @@ const newSessionStatus = {
 
 router.get(
   "/game/new",
-  query("side").notEmpty().isIn(Object.values(SIDE_SELECTION)),
+  query("side").notEmpty().isIn(Object.values(SelectionSide)),
   async (req, res, next) => {
     try {
       const sideSelection = req.query.side;
 
       let side = sideSelection;
-      if (sideSelection === SIDE_SELECTION.RANDOM) {
+      if (sideSelection === SelectionSide.RANDOM) {
         side = Math.random() > 0.5 ? Side.WHITE : Side.BLACK;
       }
 

@@ -73,7 +73,7 @@ export function createDefaultGrid(): Grid {
   grid[7][6] = new Knight(Side.BLACK);
   grid[7][7] = new Rook(Side.BLACK);
 
-  grid[6][0] = new Pawn(Side.BLACK);
+  grid[6][0] = new Pawn(Side.WHITE);
   grid[6][1] = new Pawn(Side.BLACK);
   grid[6][2] = new Pawn(Side.BLACK);
   grid[6][3] = new Pawn(Side.BLACK);

@@ -3,6 +3,10 @@ import { getAllowedMoves } from "src/features/game/GameManager";
 import GameState from "src/models/GameState";
 import Session from "src/models/Session";
 import Side from "src/shared/enums/side";
+import Bishop from "src/shared/figures/Bishop";
+import Knight from "src/shared/figures/Knight";
+import Queen from "src/shared/figures/Queen";
+import Rook from "src/shared/figures/Rook";
 import { calcIsCheck, calcIsMate } from "src/shared/logic/calcMoves";
 import gameStateObjectToClass from "src/shared/utils/gameStateObjectToClass";
 
@@ -20,19 +24,27 @@ export default class SocketService {
   createGameSessionSocket(session: Session): Namespace {
     const gameNamespace = this.ioInstance.of(session.id);
 
+    gameNamespace.use((socket, next) => {
+      const token = socket.handshake.auth.token;
+      next();
+      // if (token === session.access_token) {
+      //     next();
+      // }
+      // next(new Error("invalid token"));
+    });
+
     gameNamespace.on("connection", async (socket) => {
-      console.log(socket.handshake.auth);
-      console.log(`connected to ${session.id}`);
       const gameState = await GameState.query().findById(session.id);
       socket.emit("state", gameState.data);
 
       socket.on("move", async (message, callback) => {
-        const { fromX, fromY, toX, toY } = message;
+        const { fromX, fromY, toX, toY, promotionFigure } = message;
 
         const gameStateRecord = await GameState.query().findById(session.id);
         const gameState = gameStateObjectToClass(gameStateRecord.data);
         const { grid, currentSideMove, allowedMoves } = gameState;
 
+        // check if move is allowed
         if (
           !allowedMoves[`[${fromX}, ${fromY}]`].some(
             ([x, y]) => x === toX && y === toY
@@ -44,11 +56,28 @@ export default class SocketService {
           return;
         }
 
-        const figure = grid[fromX][fromY];
+        let figure = grid[fromX][fromY];
 
         const newGrid = grid.map((row) => row.slice());
         const oppositeSide =
           currentSideMove === Side.WHITE ? Side.BLACK : Side.WHITE;
+
+        // check promotion
+        if ((figure.name === "Pawn" && toX === 0) || toX === grid.length - 1) {
+          console.log(promotionFigure);
+          if (promotionFigure === "Queen") {
+            figure = new Queen(currentSideMove);
+          }
+          if (promotionFigure === "Bishop") {
+            figure = new Bishop(currentSideMove);
+          }
+          if (promotionFigure === "Knight") {
+            figure = new Knight(currentSideMove);
+          }
+          if (promotionFigure === "Rook") {
+            figure = new Rook(currentSideMove);
+          }
+        }
 
         // passant check
         if (figure.name === "Pawn" && fromY !== toY) {
@@ -109,11 +138,3 @@ export default class SocketService {
     return gameNamespace;
   }
 }
-
-// gameNamespace.use((socket, next) => {
-//     const token = socket.handshake.auth.token;
-//     if (token === session.access_token) {
-//         next();
-//     }
-//     next(new Error("invalid token"));
-// });

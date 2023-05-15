@@ -1,6 +1,6 @@
 import { Box, Card, Typography, useTheme } from '@mui/material';
 import Figure from 'components/Figure';
-import { useEffect, useMemo, useRef } from 'react';
+import { RefObject, useEffect, useMemo, useRef } from 'react';
 import Scrollbar from 'react-scrollbars-custom';
 import HistoryType from 'types/History';
 import convertToChessCoords from 'utils/convertToChessCoords';
@@ -11,7 +11,7 @@ interface Props {
 
 const History = ({ history }: Props) => {
   const theme = useTheme();
-  const scrollbarRef = useRef(null);
+  const scrollbarRef = useRef<RefObject>(null);
 
   const convertedHistory = useMemo(
     () =>
