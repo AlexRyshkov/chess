@@ -1,7 +1,7 @@
-import Figure from "../figures/Figure";
+import Piece from "src/features/game/pieces/Piece";
 
 type History = {
-  figure: Figure;
+  piece: Piece;
   from: [number, number];
   to: [number, number];
 }[];

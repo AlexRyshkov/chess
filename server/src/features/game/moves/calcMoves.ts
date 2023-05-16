@@ -1,5 +1,6 @@
-import Side from "../enums/side";
-import GameState from "../types/GameState";
+import PieceName from "src/features/game/enums/PieceName";
+import Side from "../enums/Side";
+import GameStateData from "../types/GameStateData";
 import Grid from "../types/Grid";
 
 const diagonalMoveFunctions: [
@@ -104,7 +105,7 @@ function calcAllowedMove(
 }
 
 export function filterMovesByCheck(
-  gameState: GameState,
+  gameState: GameStateData,
   x: number,
   y: number,
   moves: [number, number][]
@@ -126,7 +127,7 @@ export function filterMovesByCheck(
 }
 
 export function getSideAttackedCells(
-  gameState: GameState,
+  gameState: GameStateData,
   side: Side
 ): [number, number][] {
   const { grid } = gameState;
@@ -142,19 +143,19 @@ export function getSideAttackedCells(
   return result;
 }
 
-export function isKingAttacked(gameState: GameState, side: Side) {
+export function isKingAttacked(gameState: GameStateData, side: Side) {
   const { grid } = gameState;
   const sideAttackedCells = getSideAttackedCells(gameState, side);
   return sideAttackedCells.some(([x, y]) =>
-    grid[x][y]?.name === "King" ? grid[x][y]?.side === side : false
+    grid[x][y]?.name === PieceName.king ? grid[x][y]?.side === side : false
   );
 }
 
-export function calcIsCheck(gameState: GameState, side: Side) {
+export function calcIsCheck(gameState: GameStateData, side: Side) {
   return isKingAttacked(gameState, side);
 }
 
-export function calcIsMate(gameState: GameState, side: Side) {
+export function calcIsMate(gameState: GameStateData, side: Side) {
   const { grid } = gameState;
   if (calcIsCheck(gameState, side)) {
     const figuresPositions = getFiguresPositions(grid, side);
@@ -170,16 +171,6 @@ export function calcIsMate(gameState: GameState, side: Side) {
   return false;
 }
 
-function getKing(grid: Grid, side: Side) {
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid.length; j++) {
-      if (grid[i][j]?.name === "King" && grid[i][j]?.side === side) {
-        return grid[i][j];
-      }
-    }
-  }
-}
-
 function getFiguresPositions(grid: Grid, side: Side) {
   const result: [number, number][] = [];
   for (let i = 0; i < grid.length; i++) {
@@ -193,7 +184,7 @@ function getFiguresPositions(grid: Grid, side: Side) {
 }
 
 export function hasMovedPreviously(
-  gameState: GameState,
+  gameState: GameStateData,
   from: [number, number]
 ) {
   return (

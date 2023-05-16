@@ -1,17 +1,17 @@
-import Side from "src/shared/enums/side";
-import Bishop from "src/shared/figures/Bishop";
-import King from "src/shared/figures/King";
-import Knight from "src/shared/figures/Knight";
-import Pawn from "src/shared/figures/Pawn";
-import Queen from "src/shared/figures/Queen";
-import Rook from "src/shared/figures/Rook";
-import GameState from "src/shared/types/GameState";
-import Grid from "src/shared/types/Grid";
+import Side from "src/features/game/enums/Side";
+import Bishop from "src/features/game/pieces/Bishop";
+import King from "src/features/game/pieces/King";
+import Knight from "src/features/game/pieces/Knight";
+import Pawn from "src/features/game/pieces/Pawn";
+import Queen from "src/features/game/pieces/Queen";
+import Rook from "src/features/game/pieces/Rook";
+import GameStateData from "src/features/game/types/GameStateData";
+import Grid from "src/features/game/types/Grid";
 
-export function createGameState(): GameState {
+export function createGameState(): GameStateData {
   const gameState = {
     grid: createDefaultGrid(),
-    currentSideMove: Side.WHITE,
+    currentSideMove: Side.white,
     allowedMoves: {},
     history: [],
     isCheck: false,
@@ -25,7 +25,7 @@ export function createGameState(): GameState {
 }
 
 export function getAllowedMoves(
-  gameState: GameState,
+  gameState: GameStateData,
   side: Side
 ): { [key: string]: [number, number][] } {
   let result = {};
@@ -46,41 +46,41 @@ export function createDefaultGrid(): Grid {
     grid[i] = Array(8).fill(null);
   }
 
-  grid[0][0] = new Rook(Side.WHITE);
-  grid[0][1] = new Knight(Side.WHITE);
-  grid[0][2] = new Bishop(Side.WHITE);
-  grid[0][3] = new King(Side.WHITE);
-  grid[0][4] = new Queen(Side.WHITE);
-  grid[0][5] = new Bishop(Side.WHITE);
-  grid[0][6] = new Knight(Side.WHITE);
-  grid[0][7] = new Rook(Side.WHITE);
+  grid[0][0] = new Rook(Side.white);
+  grid[0][1] = new Knight(Side.white);
+  grid[0][2] = new Bishop(Side.white);
+  grid[0][3] = new King(Side.white);
+  grid[0][4] = new Queen(Side.white);
+  grid[0][5] = new Bishop(Side.white);
+  grid[0][6] = new Knight(Side.white);
+  grid[0][7] = new Rook(Side.white);
 
-  grid[1][0] = new Pawn(Side.WHITE);
-  grid[1][1] = new Pawn(Side.WHITE);
-  grid[1][2] = new Pawn(Side.WHITE);
-  grid[1][3] = new Pawn(Side.WHITE);
-  grid[1][4] = new Pawn(Side.WHITE);
-  grid[1][5] = new Pawn(Side.WHITE);
-  grid[1][6] = new Pawn(Side.WHITE);
-  grid[1][7] = new Pawn(Side.WHITE);
+  grid[1][0] = new Pawn(Side.white);
+  grid[1][1] = new Pawn(Side.white);
+  grid[1][2] = new Pawn(Side.white);
+  grid[1][3] = new Pawn(Side.white);
+  grid[1][4] = new Pawn(Side.white);
+  grid[1][5] = new Pawn(Side.white);
+  grid[1][6] = new Pawn(Side.white);
+  grid[1][7] = new Pawn(Side.white);
 
-  grid[7][0] = new Rook(Side.BLACK);
-  grid[7][1] = new Knight(Side.BLACK);
-  grid[7][2] = new Bishop(Side.BLACK);
-  grid[7][3] = new King(Side.BLACK);
-  grid[7][4] = new Queen(Side.BLACK);
-  grid[7][5] = new Bishop(Side.BLACK);
-  grid[7][6] = new Knight(Side.BLACK);
-  grid[7][7] = new Rook(Side.BLACK);
+  grid[7][0] = new Rook(Side.black);
+  grid[7][1] = new Knight(Side.black);
+  grid[7][2] = new Bishop(Side.black);
+  grid[7][3] = new King(Side.black);
+  grid[7][4] = new Queen(Side.black);
+  grid[7][5] = new Bishop(Side.black);
+  grid[7][6] = new Knight(Side.black);
+  grid[7][7] = new Rook(Side.black);
 
-  grid[6][0] = new Pawn(Side.WHITE);
-  grid[6][1] = new Pawn(Side.BLACK);
-  grid[6][2] = new Pawn(Side.BLACK);
-  grid[6][3] = new Pawn(Side.BLACK);
-  grid[6][4] = new Pawn(Side.BLACK);
-  grid[6][5] = new Pawn(Side.BLACK);
-  grid[6][6] = new Pawn(Side.BLACK);
-  grid[6][7] = new Pawn(Side.BLACK);
+  grid[6][0] = new Pawn(Side.white);
+  grid[6][1] = new Pawn(Side.black);
+  grid[6][2] = new Pawn(Side.black);
+  grid[6][3] = new Pawn(Side.black);
+  grid[6][4] = new Pawn(Side.black);
+  grid[6][5] = new Pawn(Side.black);
+  grid[6][6] = new Pawn(Side.black);
+  grid[6][7] = new Pawn(Side.black);
 
   return grid;
 }
@@ -91,36 +91,36 @@ export function createCastlingGrid(): Grid {
     grid[i] = Array(8).fill(null);
   }
 
-  grid[0][0] = new Rook(Side.WHITE);
-  grid[0][3] = new King(Side.WHITE);
-  grid[0][7] = new Rook(Side.WHITE);
+  grid[0][0] = new Rook(Side.white);
+  grid[0][3] = new King(Side.white);
+  grid[0][7] = new Rook(Side.white);
 
-  grid[1][0] = new Pawn(Side.WHITE);
-  grid[1][1] = new Pawn(Side.WHITE);
-  grid[1][2] = new Pawn(Side.WHITE);
-  grid[1][3] = new Pawn(Side.WHITE);
-  grid[1][4] = new Pawn(Side.WHITE);
-  grid[1][5] = new Pawn(Side.WHITE);
-  grid[1][6] = new Pawn(Side.WHITE);
-  grid[1][7] = new Pawn(Side.WHITE);
+  grid[1][0] = new Pawn(Side.white);
+  grid[1][1] = new Pawn(Side.white);
+  grid[1][2] = new Pawn(Side.white);
+  grid[1][3] = new Pawn(Side.white);
+  grid[1][4] = new Pawn(Side.white);
+  grid[1][5] = new Pawn(Side.white);
+  grid[1][6] = new Pawn(Side.white);
+  grid[1][7] = new Pawn(Side.white);
 
-  grid[7][0] = new Rook(Side.BLACK);
-  grid[7][1] = new Knight(Side.BLACK);
-  grid[7][2] = new Bishop(Side.BLACK);
-  grid[7][3] = new King(Side.BLACK);
-  grid[7][4] = new Queen(Side.BLACK);
-  grid[7][5] = new Bishop(Side.BLACK);
-  grid[7][6] = new Knight(Side.BLACK);
-  grid[7][7] = new Rook(Side.BLACK);
+  grid[7][0] = new Rook(Side.black);
+  grid[7][1] = new Knight(Side.black);
+  grid[7][2] = new Bishop(Side.black);
+  grid[7][3] = new King(Side.black);
+  grid[7][4] = new Queen(Side.black);
+  grid[7][5] = new Bishop(Side.black);
+  grid[7][6] = new Knight(Side.black);
+  grid[7][7] = new Rook(Side.black);
 
-  grid[6][0] = new Pawn(Side.BLACK);
-  grid[6][1] = new Pawn(Side.BLACK);
-  grid[6][2] = new Pawn(Side.BLACK);
-  grid[6][3] = new Pawn(Side.BLACK);
-  grid[6][4] = new Pawn(Side.BLACK);
-  grid[6][5] = new Pawn(Side.BLACK);
-  grid[6][6] = new Pawn(Side.BLACK);
-  grid[6][7] = new Pawn(Side.BLACK);
+  grid[6][0] = new Pawn(Side.black);
+  grid[6][1] = new Pawn(Side.black);
+  grid[6][2] = new Pawn(Side.black);
+  grid[6][3] = new Pawn(Side.black);
+  grid[6][4] = new Pawn(Side.black);
+  grid[6][5] = new Pawn(Side.black);
+  grid[6][6] = new Pawn(Side.black);
+  grid[6][7] = new Pawn(Side.black);
 
   return grid;
 }
@@ -131,9 +131,9 @@ export function createBeforeCheckGrid(): Grid {
     grid[i] = Array(8).fill(null);
   }
 
-  grid[0][0] = new King(Side.BLACK);
-  grid[7][7] = new King(Side.WHITE);
-  grid[1][7] = new Queen(Side.WHITE);
+  grid[0][0] = new King(Side.black);
+  grid[7][7] = new King(Side.white);
+  grid[1][7] = new Queen(Side.white);
 
   return grid;
 }

@@ -2,9 +2,8 @@ import cors from "cors";
 import express from "express";
 import Knex from "knex";
 import { Model } from "objection";
-import Session from "src/models/Session";
 import router from "src/routes";
-import SocketService from "src/services/socketService";
+import { initSocket } from "src/services/socketService";
 import config from "../knexfile";
 
 const app = express();
@@ -26,10 +25,4 @@ const server = app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });
 
-export const socketService = new SocketService(server);
-
-Session.query().then((sessions) => {
-  for (const session of sessions) {
-    socketService.createGameSessionSocket(session);
-  }
-});
+initSocket(server);

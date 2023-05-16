@@ -1,6 +1,6 @@
-enum SIDE_SELECTION {
+enum SelectionSide {
   WHITE = "White",
   BLACK = "Black",
   RANDOM = "Random",
 }
-export default SIDE_SELECTION;
+export default SelectionSide;

@@ -11,7 +11,7 @@ interface Props {
 
 const History = ({ history }: Props) => {
   const theme = useTheme();
-  const scrollbarRef = useRef<RefObject>(null);
+  const scrollbarRef = useRef<any>(null);
 
   const convertedHistory = useMemo(
     () =>

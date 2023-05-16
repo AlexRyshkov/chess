@@ -1,23 +1,24 @@
-import Side from "../enums/side";
-import { filterMovesByCheck } from "../logic/calcMoves";
-import GameState from "../types/GameState";
+import PieceName from "src/features/game/enums/PieceName";
+import Side from "../enums/Side";
+import { filterMovesByCheck } from "../moves/calcMoves";
+import GameStateData from "../types/GameStateData";
 
-export default abstract class Figure {
+export default abstract class Piece {
   side: Side;
-  abstract name: string;
+  abstract name: PieceName;
 
   constructor(side: Side) {
     this.side = side;
   }
 
   abstract getMoves(
-    gameState: GameState,
+    gameState: GameStateData,
     x: number,
     y: number
   ): [number, number][];
 
   getAttackCells(
-    gameState: GameState,
+    gameState: GameStateData,
     x: number,
     y: number
   ): [number, number][] {
@@ -25,7 +26,7 @@ export default abstract class Figure {
   }
 
   getAllowedMoves(
-    gameState: GameState,
+    gameState: GameStateData,
     x: number,
     y: number
   ): [number, number][] {
@@ -33,15 +34,15 @@ export default abstract class Figure {
   }
 }
 
-export const FIGURE_START_LOCATIONS: any = {
-  [Side.WHITE]: {
+export const PieceStartLocation: any = {
+  [Side.white]: {
     Rook: [
       [0, 0],
       [0, 7],
     ],
     King: [0, 3],
   },
-  [Side.BLACK]: {
+  [Side.black]: {
     Rook: [
       [7, 0],
       [7, 7],

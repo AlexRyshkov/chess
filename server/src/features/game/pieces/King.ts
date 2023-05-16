@@ -1,24 +1,25 @@
+import PieceName from "src/features/game/enums/PieceName";
 import {
   hasMovedPreviously,
   isEnemyFigure,
   isInGridRange,
-} from "../logic/calcMoves";
-import GameState from "../types/GameState";
-import Figure, { FIGURE_START_LOCATIONS } from "./Figure";
+} from "../moves/calcMoves";
+import GameStateData from "../types/GameStateData";
+import Piece, { PieceStartLocation } from "./Piece";
 
-export default class King extends Figure {
-  name = "King";
+export default class King extends Piece {
+  name = PieceName.king;
 
-  getMoves(gameState: GameState, x: number, y: number): [number, number][] {
+  getMoves(gameState: GameStateData, x: number, y: number): [number, number][] {
     const result: [number, number][] = [];
 
     // castling check
     if (!gameState.isCheck) {
       const kingMoved = hasMovedPreviously(
         gameState,
-        FIGURE_START_LOCATIONS[this.side][this.name]
+        PieceStartLocation[this.side][this.name]
       );
-      const rookStartLocations = FIGURE_START_LOCATIONS[this.side]["Rook"];
+      const rookStartLocations = PieceStartLocation[this.side]["Rook"];
 
       if (!kingMoved) {
         for (const [rookX, rookY] of rookStartLocations) {
@@ -56,7 +57,7 @@ export default class King extends Figure {
   }
 
   override getAllowedMoves(
-    gameState: GameState,
+    gameState: GameStateData,
     x: number,
     y: number
   ): [number, number][] {

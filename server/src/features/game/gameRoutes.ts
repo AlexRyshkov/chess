@@ -3,22 +3,22 @@ import { query } from "express-validator";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import { createGameState } from "src/features/game/GameManager";
-import { socketService } from "src/index";
 import GameState from "src/models/GameState";
 import Session, { SessionStatus } from "src/models/Session";
-import SelectionSide from "src/shared/enums/selectionSide";
-import Side from "src/shared/enums/side";
+import SelectionSide from "src/features/game/enums/SelectionSide";
+import Side from "src/features/game/enums/Side";
+import { createGameSessionSocket } from "./gameSockets";
 
 const router = express.Router();
 
 const JoinedPlayerSide = {
-  [SessionStatus.waitingForWhitePlayer]: Side.WHITE,
-  [SessionStatus.waitingForBlackPlayer]: Side.BLACK,
+  [SessionStatus.waitingForWhitePlayer]: Side.white,
+  [SessionStatus.waitingForBlackPlayer]: Side.black,
 };
 
 const newSessionStatus = {
-  [Side.WHITE]: SessionStatus.waitingForBlackPlayer,
-  [Side.BLACK]: SessionStatus.waitingForWhitePlayer,
+  [Side.white]: SessionStatus.waitingForBlackPlayer,
+  [Side.black]: SessionStatus.waitingForWhitePlayer,
 };
 
 router.get(
@@ -26,11 +26,9 @@ router.get(
   query("side").notEmpty().isIn(Object.values(SelectionSide)),
   async (req, res, next) => {
     try {
-      const sideSelection = req.query.side;
-
-      let side = sideSelection;
-      if (sideSelection === SelectionSide.RANDOM) {
-        side = Math.random() > 0.5 ? Side.WHITE : Side.BLACK;
+      let side = req.query.side;
+      if (side === SelectionSide.RANDOM) {
+        side = Math.random() > 0.5 ? Side.white : Side.black;
       }
 
       const status = newSessionStatus[side];
@@ -44,7 +42,7 @@ router.get(
         session_id: session.id,
         data: gameState,
       });
-      socketService.createGameSessionSocket(session);
+      createGameSessionSocket(session);
 
       const accessToken = jwt.sign({ side }, process.env.SECRET_KEY);
 
