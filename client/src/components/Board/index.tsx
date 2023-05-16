@@ -25,7 +25,7 @@ const Board = ({ grid, highlightedCells, flipped }: Props) => {
 
       cells.push(
         <Cell
-          figure={grid[x][y]}
+          piece={grid[x][y]}
           key={`${x}${y}`}
           x={x}
           y={y}

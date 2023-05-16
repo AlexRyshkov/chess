@@ -1,9 +1,10 @@
 import Piece from './Piece';
+import Coords from "./Coords";
 
 type History = {
-  figure: Piece;
-  from: [number, number];
-  to: [number, number];
+  piece: Piece;
+  from: Coords;
+  to: Coords;
 }[];
 
 export default History;

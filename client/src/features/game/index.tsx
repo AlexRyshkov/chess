@@ -35,7 +35,7 @@ const GameContent = () => {
   const theme = useTheme();
   const lastMove = history[history.length - 1];
 
-  const promoteSubmit = useCallback((figure: PieceName) => promote(figure), [promote]);
+  const promoteSubmit = useCallback((piece: PieceName) => promote(piece), [promote]);
 
   return (
     <>
@@ -50,7 +50,7 @@ const GameContent = () => {
           <Board
             grid={grid}
             flipped={playerSide !== Side.Black}
-            highlightedCells={lastMove ? [lastMove.from, lastMove.to] : []}
+            highlightedCells={lastMove ? [[lastMove.from.x, lastMove.from.y], [lastMove.to.x, lastMove.to.y]] : []}
           />
         </BoardContainer>
         <Stack width={320} spacing={1}>

@@ -6,7 +6,7 @@ import createGrid from "./createGrid";
 export default function createGameState(): GameStateData {
   const gameState = {
     grid: createGrid(),
-    currentSideMove: Side.white,
+    currentSideMove: Side.White,
     allowedMoves: {},
     history: [],
     isCheck: false,

@@ -1,5 +1,7 @@
-export default function convertToChessCoords(x: number, y: number): string {
-  return `${gridColumnNames[y]}${x + 1}`;
+import Coords from "../types/Coords";
+
+export default function convertToChessCoords(coords: Coords): string {
+  return `${gridColumnNames[coords.y]}${coords.x + 1}`;
 }
 
 const gridColumnNames: { [key: number]: string } = {

@@ -3,9 +3,10 @@ import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { Socket } from 'socket.io-client';
-import GameState from 'types/GameState';
+import GameStateData from 'types/GameStateData';
 import Grid from 'types/Grid';
 import PromotionStatus from 'types/Promotion';
+// @ts-ignore
 import pieceMoveSound from '../../piece-move-sound.mp3';
 import History from '../../types/History';
 import connectToGame from './connectToGame';
@@ -19,7 +20,7 @@ export const GameContext = createContext<{
   history: History;
   allowedMoves: any;
   promotionStatus: PromotionStatus;
-  promote: (figure: PieceName) => void;
+  promote: (piece: PieceName) => void;
   makeMove: (from: [number, number], to: [number, number]) => void;
 }>({
   grid: [],
@@ -38,7 +39,7 @@ export const GameContext = createContext<{
   },
 });
 
-const newGameState: GameState = {
+const newGameState: GameStateData = {
   grid: [],
   currentSideMove: Side.White,
   allowedMoves: {},
@@ -48,7 +49,7 @@ const newGameState: GameState = {
 };
 
 const GameProvider = ({ children }: { children: ReactElement }) => {
-  const [gameState, setGameState] = useState<GameState>(newGameState);
+  const [gameState, setGameState] = useState<GameStateData>(newGameState);
   const [socket, setSocket] = useState<Socket>();
   const [playerSide, setPlayerSide] = useState<Side>();
   const [promotionStatus, setPromotionStatus] = useState<PromotionStatus>({ isPending: false });
@@ -73,7 +74,7 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
         console.log('connected to server');
       });
 
-      socket.on('state', (data: GameState) => {
+      socket.on('state', (data: GameStateData) => {
         audio.play();
         setGameState(data);
       });
@@ -95,13 +96,13 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
 
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
-      const figure = grid[fromX][fromY]!;
-      if (figure.name === PieceName.Pawn && (toX === 0 || toX === grid.length - 1)) {
-        setPromotionStatus({ isPending: true, from: [fromX, fromY], to: [toX, toY] });
+      const piece = grid[fromX][fromY]!;
+      if (piece.name === PieceName.Pawn && (toX === 0 || toX === grid.length - 1)) {
+        setPromotionStatus({ isPending: true, from: {x:fromX, y:fromY}, to: {x:toX, y:toY} });
         return;
       }
 
-      socket?.emit('move', { from: {x: fromX, y: fromY}, to: {x: toX, y: toY} }, (data: GameState) => {
+      socket?.emit('move', { from: {x: fromX, y: fromY}, to: {x: toX, y: toY} }, (data: GameStateData) => {
           if (data) {
               audio.play();
               setGameState(data);
@@ -112,13 +113,13 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
   );
 
   const promote = useCallback(
-    (figure: PieceName) => {
-      const [fromX, fromY] = promotionStatus.from!;
-      const [toX, toY] = promotionStatus.to!;
+    (piece: PieceName) => {
+      const {x:fromX, y:fromY} = promotionStatus.from!;
+      const {x:toX, y:toY} = promotionStatus.to!;
       socket?.emit(
         'move',
-        { fromX, fromY, toX, toY, promotionFigure: figure },
-        (data: GameState) => {
+        { fromX, fromY, toX, toY, promotionPiece: piece },
+        (data: GameStateData) => {
           audio.play();
           setGameState(data);
           setPromotionStatus({ isPending: false });
@@ -127,6 +128,8 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
     },
     [promotionStatus, audio],
   );
+
+  console.log(gameState);
 
   return (
     <GameContext.Provider

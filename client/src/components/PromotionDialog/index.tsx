@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, Typography } from '@mui/material';
-import Figure from 'components/Figure';
+import Piece from '../Piece';
 import FigureEnum from 'enums/PieceName';
 import { GameContext } from 'features/game/GameProvider';
 import { useContext } from 'react';
@@ -26,7 +26,7 @@ const PromotionDialog = ({ open, onSubmit }: Props) => {
         </Typography>
         {promotionFigures.map((figure) => (
           <Button key={figure} onClick={() => onSubmit(figure)}>
-            <Figure figure={{ name: figure, side: playerSide }} width={100} height={100} />
+            <Piece piece={{ name: figure, side: playerSide }} width={100} height={100} />
           </Button>
         ))}
       </Box>

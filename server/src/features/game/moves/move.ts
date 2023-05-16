@@ -14,7 +14,7 @@ export default function move(moveData: MoveData, gameState: GameStateData) {
     promotionPiece,
   } = moveData;
 
-  const isAllowed = !allowedMoves[`[${fromX}, ${fromY}]`].some(
+  const isAllowed = allowedMoves[`[${fromX}, ${fromY}]`].some(
     ({ x, y }) => x === toX && y === toY
   );
 
@@ -59,7 +59,7 @@ export default function move(moveData: MoveData, gameState: GameStateData) {
 
 function updateGameState(gameState: GameStateData) {
   const { currentSideMove } = gameState;
-  const oppositeSide = currentSideMove === Side.white ? Side.black : Side.white;
+  const oppositeSide = currentSideMove === Side.White ? Side.Black : Side.White;
 
   const isCheck = calcIsCheck(gameState, oppositeSide);
 
@@ -69,6 +69,7 @@ function updateGameState(gameState: GameStateData) {
     ...gameState,
     isCheck,
     isMate,
+    currentSideMove: oppositeSide,
     allowedMoves: getAllowedMoves(gameState, gameState.currentSideMove),
   };
 }

@@ -1,7 +1,9 @@
+import Coords from "./Coords";
+
 type PromotionStatus = {
   isPending: boolean;
-  from?: [number, number];
-  to?: [number, number];
+  from?: Coords;
+  to?: Coords;
 };
 
 export default PromotionStatus;

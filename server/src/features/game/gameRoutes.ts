@@ -12,13 +12,13 @@ import createGameState from "./utils/createGameState";
 const router = express.Router();
 
 const JoinedPlayerSide = {
-  [SessionStatus.waitingForWhitePlayer]: Side.white,
-  [SessionStatus.waitingForBlackPlayer]: Side.black,
+  [SessionStatus.waitingForWhitePlayer]: Side.White,
+  [SessionStatus.waitingForBlackPlayer]: Side.Black,
 };
 
 const newSessionStatus = {
-  [Side.white]: SessionStatus.waitingForBlackPlayer,
-  [Side.black]: SessionStatus.waitingForWhitePlayer,
+  [Side.White]: SessionStatus.waitingForBlackPlayer,
+  [Side.Black]: SessionStatus.waitingForWhitePlayer,
 };
 
 router.get(
@@ -27,8 +27,8 @@ router.get(
   async (req, res, next) => {
     try {
       let side = req.query.side;
-      if (side === SelectionSide.RANDOM) {
-        side = Math.random() > 0.5 ? Side.white : Side.black;
+      if (side === SelectionSide.Random) {
+        side = Math.random() > 0.5 ? Side.White : Side.Black;
       }
 
       const status = newSessionStatus[side];

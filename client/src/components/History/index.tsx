@@ -1,5 +1,5 @@
 import { Box, Card, Typography, useTheme } from '@mui/material';
-import Figure from 'components/Figure';
+import Piece from '../Piece';
 import { RefObject, useEffect, useMemo, useRef } from 'react';
 import Scrollbar from 'react-scrollbars-custom';
 import HistoryType from 'types/History';
@@ -15,10 +15,10 @@ const History = ({ history }: Props) => {
 
   const convertedHistory = useMemo(
     () =>
-      history?.map(({ figure, from, to }) => ({
-        figure,
-        from: convertToChessCoords(...from),
-        to: convertToChessCoords(...to),
+      history?.map(({ piece, from, to }) => ({
+        piece: piece,
+        from: convertToChessCoords(from),
+        to: convertToChessCoords(to),
       })),
     [history],
   );
@@ -44,7 +44,7 @@ const History = ({ history }: Props) => {
         >
           {i / 2 + 1}
         </Typography>
-        <Figure figure={whiteMove.figure} width={20} height={20} />
+        <Piece piece={whiteMove.piece} width={20} height={20} />
         <Typography
           flex={1}
           width={60}
@@ -52,7 +52,7 @@ const History = ({ history }: Props) => {
         >{`${whiteMove.from}:${whiteMove.to}`}</Typography>
         {blackMove && (
           <>
-            <Figure figure={blackMove.figure} width={20} height={20} />
+            <Piece piece={blackMove.piece} width={20} height={20} />
             <Typography
               width={60}
               flex={1}

@@ -5,8 +5,8 @@ import { isEnemyFigure } from "../moves/calcMoves";
 import GameStateData from "../types/GameStateData";
 import Piece from "./Piece";
 
-export const xSigns = { [Side.white]: 1, [Side.black]: -1 };
-export const pawnStartX = { [Side.white]: 1, [Side.black]: 6 };
+export const xSigns = { [Side.White]: 1, [Side.Black]: -1 };
+export const pawnStartX = { [Side.White]: 1, [Side.Black]: 6 };
 
 export default class Pawn extends Piece {
   name = PieceName.pawn;
