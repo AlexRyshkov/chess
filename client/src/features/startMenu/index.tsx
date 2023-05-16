@@ -7,7 +7,7 @@ import { createNewGame } from '../../services/api/game';
 
 const StartMenu = () => {
   const navigate = useNavigate();
-  const [side, setSide] = useState<SideSelection>(SideSelection.WHITE);
+  const [side, setSide] = useState<SideSelection>(SideSelection.White);
 
   const startGame = async () => {
     const {
@@ -35,9 +35,9 @@ const StartMenu = () => {
             onChange={handleSide}
             aria-label='text alignment'
           >
-            <ToggleButton value={SideSelection.WHITE}>White</ToggleButton>
-            <ToggleButton value={SideSelection.BLACK}>Black</ToggleButton>
-            <ToggleButton value={SideSelection.RANDOM}>Random</ToggleButton>
+            <ToggleButton value={SideSelection.White}>White</ToggleButton>
+            <ToggleButton value={SideSelection.Black}>Black</ToggleButton>
+            <ToggleButton value={SideSelection.Random}>Random</ToggleButton>
           </ToggleButtonGroup>
 
           <Button variant='contained' onClick={startGame}>

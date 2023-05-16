@@ -1,5 +1,5 @@
-import Figure from './Figure';
+import Piece from './Piece';
 
-type Grid = (Figure | null)[][];
+type Grid = (Piece | null)[][];
 
 export default Grid;

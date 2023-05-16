@@ -2,6 +2,7 @@ import PieceName from "src/features/game/enums/PieceName";
 import Side from "../enums/Side";
 import { filterMovesByCheck } from "../moves/calcMoves";
 import GameStateData from "../types/GameStateData";
+import Coords from "src/features/game/types/Coords";
 
 export default abstract class Piece {
   side: Side;
@@ -13,40 +14,20 @@ export default abstract class Piece {
 
   abstract getMoves(
     gameState: GameStateData,
-    x: number,
-    y: number
-  ): [number, number][];
+    coords: Coords
+  ): Coords[];
 
   getAttackCells(
     gameState: GameStateData,
-    x: number,
-    y: number
-  ): [number, number][] {
-    return this.getMoves(gameState, x, y);
+    coords: Coords
+  ): Coords[] {
+    return this.getMoves(gameState, coords);
   }
 
   getAllowedMoves(
     gameState: GameStateData,
-    x: number,
-    y: number
-  ): [number, number][] {
-    return filterMovesByCheck(gameState, x, y, this.getMoves(gameState, x, y));
+    coords: Coords,
+  ): Coords[] {
+    return filterMovesByCheck(gameState, coords, this.getMoves(gameState, coords));
   }
 }
-
-export const PieceStartLocation: any = {
-  [Side.white]: {
-    Rook: [
-      [0, 0],
-      [0, 7],
-    ],
-    King: [0, 3],
-  },
-  [Side.black]: {
-    Rook: [
-      [7, 0],
-      [7, 7],
-    ],
-    King: [7, 3],
-  },
-};

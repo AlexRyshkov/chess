@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, Typography } from '@mui/material';
 import Figure from 'components/Figure';
-import FigureEnum from 'enums/Figure';
+import FigureEnum from 'enums/PieceName';
 import { GameContext } from 'features/game/GameProvider';
 import { useContext } from 'react';
 

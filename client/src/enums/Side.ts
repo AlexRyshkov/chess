@@ -1,5 +1,5 @@
 enum Side {
-  WHITE = 'White',
-  BLACK = 'Black',
+  White = 'white',
+  Black = 'black',
 }
 export default Side;

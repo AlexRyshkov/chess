@@ -1,5 +1,4 @@
 export default function convertToChessCoords(x: number, y: number): string {
-  console.log(x, y);
   return `${gridColumnNames[y]}${x + 1}`;
 }
 

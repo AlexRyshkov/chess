@@ -1,4 +1,4 @@
-import Figure from 'enums/Figure';
+import PieceName from '../../enums/PieceName';
 import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
@@ -19,12 +19,12 @@ export const GameContext = createContext<{
   history: History;
   allowedMoves: any;
   promotionStatus: PromotionStatus;
-  promote: (figure: Figure) => void;
+  promote: (figure: PieceName) => void;
   makeMove: (from: [number, number], to: [number, number]) => void;
 }>({
   grid: [],
-  currentSideMove: Side.WHITE,
-  playerSide: Side.WHITE,
+  currentSideMove: Side.White,
+  playerSide: Side.White,
   isCheck: false,
   isMate: false,
   history: [],
@@ -40,7 +40,7 @@ export const GameContext = createContext<{
 
 const newGameState: GameState = {
   grid: [],
-  currentSideMove: Side.WHITE,
+  currentSideMove: Side.White,
   allowedMoves: {},
   history: [],
   isCheck: false,
@@ -96,21 +96,23 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
       const figure = grid[fromX][fromY]!;
-      if (figure.name === Figure.Pawn && (toX === 0 || toX === grid.length - 1)) {
+      if (figure.name === PieceName.Pawn && (toX === 0 || toX === grid.length - 1)) {
         setPromotionStatus({ isPending: true, from: [fromX, fromY], to: [toX, toY] });
         return;
       }
 
-      socket?.emit('move', { fromX, fromY, toX, toY }, (data: GameState) => {
-        audio.play();
-        setGameState(data);
+      socket?.emit('move', { from: {x: fromX, y: fromY}, to: {x: toX, y: toY} }, (data: GameState) => {
+          if (data) {
+              audio.play();
+              setGameState(data);
+          }
       });
     },
     [audio, gameState, socket],
   );
 
   const promote = useCallback(
-    (figure: Figure) => {
+    (figure: PieceName) => {
       const [fromX, fromY] = promotionStatus.from!;
       const [toX, toY] = promotionStatus.to!;
       socket?.emit(

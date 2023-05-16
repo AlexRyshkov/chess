@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import Figure from 'components/Figure';
 import { useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import type FigureType from 'types/Figure';
+import type FigureType from '../../../types/Piece';
 import { GameContext } from '../../../features/game/GameProvider';
 
 export type FigureItem = {

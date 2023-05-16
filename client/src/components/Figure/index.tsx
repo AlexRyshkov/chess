@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { forwardRef, ImgHTMLAttributes } from 'react';
-import type FigureType from 'types/Figure';
+import type FigureType from '../../types/Piece';
 import ImageConfig from './imageConfig';
 
 const FigureIcon = styled('img')`

@@ -2,7 +2,7 @@ import { Box, Stack, styled, useTheme } from '@mui/material';
 import GameStatus from 'components/GameStatus';
 import History from 'components/History';
 import PromotionDialog from 'components/PromotionDialog';
-import Figure from 'enums/Figure';
+import PieceName from '../../enums/PieceName';
 import Side from 'enums/Side';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { useCallback, useContext } from 'react';
@@ -35,7 +35,7 @@ const GameContent = () => {
   const theme = useTheme();
   const lastMove = history[history.length - 1];
 
-  const promoteSubmit = useCallback((figure: Figure) => promote(figure), [promote]);
+  const promoteSubmit = useCallback((figure: PieceName) => promote(figure), [promote]);
 
   return (
     <>
@@ -49,7 +49,7 @@ const GameContent = () => {
         <BoardContainer size={Math.min(width, height) - 1}>
           <Board
             grid={grid}
-            flipped={playerSide !== Side.BLACK}
+            flipped={playerSide !== Side.Black}
             highlightedCells={lastMove ? [lastMove.from, lastMove.to] : []}
           />
         </BoardContainer>

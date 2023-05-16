@@ -1,30 +1,35 @@
+import PieceStartLocation from "src/features/game/constants/pieceStartLocation";
 import PieceName from "src/features/game/enums/PieceName";
+import Coords from "src/features/game/types/Coords";
 import {
   hasMovedPreviously,
   isEnemyFigure,
   isInGridRange,
 } from "../moves/calcMoves";
 import GameStateData from "../types/GameStateData";
-import Piece, { PieceStartLocation } from "./Piece";
+import Piece from "./Piece";
 
 export default class King extends Piece {
   name = PieceName.king;
 
-  getMoves(gameState: GameStateData, x: number, y: number): [number, number][] {
-    const result: [number, number][] = [];
+  getMoves(gameState: GameStateData, coords: Coords): Coords[] {
+    const { x, y } = coords;
+    const result = [];
 
     // castling check
     if (!gameState.isCheck) {
       const kingMoved = hasMovedPreviously(
         gameState,
-        PieceStartLocation[this.side][this.name]
+        PieceStartLocation[this.side][this.name] as Coords
       );
-      const rookStartLocations = PieceStartLocation[this.side]["Rook"];
+      const rookStartLocations = PieceStartLocation[this.side][
+        PieceName.rook
+      ] as Coords[];
 
       if (!kingMoved) {
-        for (const [rookX, rookY] of rookStartLocations) {
+        for (const { x: rookX, y: rookY } of rookStartLocations) {
           const castlingSign = rookY > y ? -1 : 1;
-          if (!hasMovedPreviously(gameState, [rookX, rookY])) {
+          if (!hasMovedPreviously(gameState, { x: rookX, y: rookY })) {
             let canDoCastling = true;
             for (let i = rookY + castlingSign; i < y; i = i + castlingSign) {
               if (gameState.grid[x][i] !== null) {
@@ -33,7 +38,7 @@ export default class King extends Piece {
               }
             }
             if (canDoCastling) {
-              result.push([x, y - 2 * castlingSign]);
+              result.push({ x: x, y: y - 2 * castlingSign });
             }
           }
         }
@@ -47,25 +52,22 @@ export default class King extends Piece {
         if (
           (isInGridRange(gameState.grid, newX, newY) &&
             gameState.grid[newX][newY] === null) ||
-          isEnemyFigure(gameState.grid, [x, y], [newX, newY])
+          isEnemyFigure(gameState.grid, coords, { x: newX, y: newY })
         ) {
-          result.push([newX, newY]);
+          result.push({x:newX, y:newY});
         }
       }
     }
     return result;
   }
 
-  override getAllowedMoves(
-    gameState: GameStateData,
-    x: number,
-    y: number
-  ): [number, number][] {
-    const moves = super.getAllowedMoves(gameState, x, y);
-    const filteredByCastling = moves.filter(([, moveY]) => {
+  override getAllowedMoves(gameState: GameStateData, coords: Coords): Coords[] {
+    const { x, y } = coords;
+    const moves = super.getAllowedMoves(gameState, coords);
+    const filteredByCastling = moves.filter(({ y: moveY }) => {
       // castling move
       if (Math.abs(moveY - y) === 2) {
-        return moves.some(([, y]) => Math.abs(moveY - y) === 1);
+        return moves.some(({ y }) => Math.abs(moveY - y) === 1);
       }
       return true;
     });

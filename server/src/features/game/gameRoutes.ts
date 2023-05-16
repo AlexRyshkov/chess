@@ -2,12 +2,12 @@ import express from "express";
 import { query } from "express-validator";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
-import { createGameState } from "src/features/game/GameManager";
-import GameState from "src/models/GameState";
-import Session, { SessionStatus } from "src/models/Session";
 import SelectionSide from "src/features/game/enums/SelectionSide";
 import Side from "src/features/game/enums/Side";
+import GameState from "src/models/GameState";
+import Session, { SessionStatus } from "src/models/Session";
 import { createGameSessionSocket } from "./gameSockets";
+import createGameState from "./utils/createGameState";
 
 const router = express.Router();
 

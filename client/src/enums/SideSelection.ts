@@ -1,6 +1,6 @@
 enum SideSelection {
-  WHITE = 'White',
-  BLACK = 'Black',
-  RANDOM = 'Random',
+  White = 'White',
+  Black = 'Black',
+  Random = 'Random',
 }
 export default SideSelection;

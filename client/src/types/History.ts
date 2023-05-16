@@ -1,7 +1,7 @@
-import Figure from './Figure';
+import Piece from './Piece';
 
 type History = {
-  figure: Figure;
+  figure: Piece;
   from: [number, number];
   to: [number, number];
 }[];
