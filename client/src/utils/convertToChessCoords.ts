@@ -1,4 +1,4 @@
-import Coords from "../types/Coords";
+import Coords from '../types/Coords';
 
 export default function convertToChessCoords(coords: Coords): string {
   return `${gridColumnNames[coords.y]}${coords.x + 1}`;

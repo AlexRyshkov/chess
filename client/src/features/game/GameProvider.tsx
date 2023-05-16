@@ -98,24 +98,32 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
       const piece = grid[fromX][fromY]!;
       if (piece.name === PieceName.Pawn && (toX === 0 || toX === grid.length - 1)) {
-        setPromotionStatus({ isPending: true, from: {x:fromX, y:fromY}, to: {x:toX, y:toY} });
+        setPromotionStatus({
+          isPending: true,
+          from: { x: fromX, y: fromY },
+          to: { x: toX, y: toY },
+        });
         return;
       }
 
-      socket?.emit('move', { from: {x: fromX, y: fromY}, to: {x: toX, y: toY} }, (data: GameStateData) => {
+      socket?.emit(
+        'move',
+        { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } },
+        (data: GameStateData) => {
           if (data) {
-              audio.play();
-              setGameState(data);
+            audio.play();
+            setGameState(data);
           }
-      });
+        },
+      );
     },
     [audio, gameState, socket],
   );
 
   const promote = useCallback(
     (piece: PieceName) => {
-      const {x:fromX, y:fromY} = promotionStatus.from!;
-      const {x:toX, y:toY} = promotionStatus.to!;
+      const { x: fromX, y: fromY } = promotionStatus.from!;
+      const { x: toX, y: toY } = promotionStatus.to!;
       socket?.emit(
         'move',
         { fromX, fromY, toX, toY, promotionPiece: piece },

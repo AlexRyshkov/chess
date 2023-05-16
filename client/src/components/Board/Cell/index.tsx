@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import type PieceType from '../../../types/Piece';
 import { GameContext } from '../../../features/game/GameProvider';
-import Coords from "../../../types/Coords";
+import Coords from '../../../types/Coords';
 
 export type PieceItem = {
   piece: PieceType;
@@ -34,7 +34,8 @@ function Cell({ piece, x, y, isHighlighted }: Props) {
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: 'piece',
-      canDrop: (item: PieceItem) => item.allowedCells?.some(({x:x1, y:y1}) => x === x1 && y === y1),
+      canDrop: (item: PieceItem) =>
+        item.allowedCells?.some(({ x: x1, y: y1 }) => x === x1 && y === y1),
       drop: (item: PieceItem) => makeMove([item.x, item.y], [x, y]),
       collect: (monitor) => ({
         isOver: !!monitor.isOver(),

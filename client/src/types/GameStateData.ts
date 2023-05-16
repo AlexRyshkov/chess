@@ -1,7 +1,7 @@
 import Side from 'enums/Side';
 import Grid from './Grid';
 import History from './History';
-import Coords from "./Coords";
+import Coords from './Coords';
 
 type GameStateData = {
   grid: Grid;

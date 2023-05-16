@@ -1,5 +1,5 @@
 import Piece from './Piece';
-import Coords from "./Coords";
+import Coords from './Coords';
 
 type History = {
   piece: Piece;

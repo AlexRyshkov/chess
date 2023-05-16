@@ -12,22 +12,17 @@ export default abstract class Piece {
     this.side = side;
   }
 
-  abstract getMoves(
-    gameState: GameStateData,
-    coords: Coords
-  ): Coords[];
+  abstract getMoves(gameState: GameStateData, coords: Coords): Coords[];
 
-  getAttackCells(
-    gameState: GameStateData,
-    coords: Coords
-  ): Coords[] {
+  getAttackCells(gameState: GameStateData, coords: Coords): Coords[] {
     return this.getMoves(gameState, coords);
   }
 
-  getAllowedMoves(
-    gameState: GameStateData,
-    coords: Coords,
-  ): Coords[] {
-    return filterMovesByCheck(gameState, coords, this.getMoves(gameState, coords));
+  getAllowedMoves(gameState: GameStateData, coords: Coords): Coords[] {
+    return filterMovesByCheck(
+      gameState,
+      coords,
+      this.getMoves(gameState, coords)
+    );
   }
 }

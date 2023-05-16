@@ -50,7 +50,14 @@ const GameContent = () => {
           <Board
             grid={grid}
             flipped={playerSide !== Side.Black}
-            highlightedCells={lastMove ? [[lastMove.from.x, lastMove.from.y], [lastMove.to.x, lastMove.to.y]] : []}
+            highlightedCells={
+              lastMove
+                ? [
+                    [lastMove.from.x, lastMove.from.y],
+                    [lastMove.to.x, lastMove.to.y],
+                  ]
+                : []
+            }
           />
         </BoardContainer>
         <Stack width={320} spacing={1}>

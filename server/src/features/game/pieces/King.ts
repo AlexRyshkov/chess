@@ -54,7 +54,7 @@ export default class King extends Piece {
             gameState.grid[newX][newY] === null) ||
           isEnemyFigure(gameState.grid, coords, { x: newX, y: newY })
         ) {
-          result.push({x:newX, y:newY});
+          result.push({ x: newX, y: newY });
         }
       }
     }
