@@ -4,9 +4,28 @@ import GameState from "src/models/GameState";
 import Session from "src/models/Session";
 import { io } from "src/services/socketService";
 import move from "./moves/move";
+import GameStateData from "./types/GameStateData";
+import MoveData from "./types/MoveData";
+
+interface ServerToClientEvents {
+  state: (data: GameStateData) => void;
+}
+
+interface ClientToServerEvents {
+  move: (data: MoveData, callback: (response: GameStateData) => void) => void;
+}
+
+interface InterServerEvents {}
+
+interface SocketData {}
 
 export function createGameSessionSocket(session: Session): Namespace {
-  const gameNamespace = io.of(session.id);
+  const gameNamespace: Namespace<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    InterServerEvents,
+    SocketData
+  > = io.of(session.id);
 
   // gameNamespace.use((socket, next) => {
   //     const token = socket.handshake.auth.token;
