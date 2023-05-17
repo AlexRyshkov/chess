@@ -1,44 +1,73 @@
+import { Box } from '@mui/material';
+import Piece from '../../Piece';
 import { useContext } from 'react';
-import { useDrop } from 'react-dnd';
-import Grid from 'shared/types/Grid';
+import { useDrag, useDrop } from 'react-dnd';
+import type PieceType from '../../../types/Piece';
 import { GameContext } from '../../../features/game/GameProvider';
-import Figure, { FigureItem } from '../../Figure';
+import Coords from '../../../types/Coords';
 
-function Cell({
-  grid,
-  x,
-  y,
-  isHighlighted,
-}: {
-  grid: Grid;
+export type PieceItem = {
+  piece: PieceType;
   x: number;
   y: number;
-  isHighlighted: boolean;
-}) {
-  const { dragAllowedCells, makeMove } = useContext(GameContext);
-  const figure = grid[x][y];
-  const isAllowedToMove = dragAllowedCells.some(([x1, y1]) => x === x1 && y === y1);
+  allowedCells: Coords[];
+};
 
-  const [_, drop] = useDrop(
+interface Props {
+  piece: PieceType | null;
+  x: number;
+  y: number;
+  isHighlighted?: boolean;
+}
+
+function Cell({ piece, x, y, isHighlighted }: Props) {
+  const { makeMove, allowedMoves } = useContext(GameContext);
+
+  const [, drag] = useDrag(
     () => ({
-      accept: 'Figure',
-      canDrop: () => isAllowedToMove,
-      drop: (item: FigureItem) => makeMove([item.x, item.y], [x, y]),
+      type: 'piece',
+      item: { piece: piece, x, y, allowedCells: allowedMoves[`[${x}, ${y}]`] },
     }),
-    [isAllowedToMove, makeMove],
+    [piece, x, y, allowedMoves],
+  );
+
+  const [{ isOver, canDrop }, drop] = useDrop(
+    () => ({
+      accept: 'piece',
+      canDrop: (item: PieceItem) =>
+        item.allowedCells?.some(({ x: x1, y: y1 }) => x === x1 && y === y1),
+      drop: (item: PieceItem) => makeMove([item.x, item.y], [x, y]),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
+    }),
+    [makeMove],
   );
 
   return (
-    <div
-      ref={drop}
-      style={{
-        background: (x + y) % 2 === 0 ? 'white' : 'grey',
-        ...(isHighlighted && { background: 'green' }),
-        ...(isAllowedToMove && { background: 'yellow' }),
-      }}
-    >
-      {figure && <Figure figure={figure} x={x} y={y} />}
-    </div>
+    <Box ref={drop} position='relative' bgcolor={(x + y) % 2 === 0 ? '#f0d9b5' : '#b58863'}>
+      {!isOver && canDrop && (
+        <Box
+          width='100%'
+          height='100%'
+          position='absolute'
+          sx={{
+            background:
+              piece !== null
+                ? 'radial-gradient(transparent 0%, transparent 79%, rgba(20, 85, 0, 0.3) 80%)'
+                : 'radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%)',
+          }}
+        />
+      )}
+      {isOver && canDrop && (
+        <Box position='absolute' width='100%' height='100%' bgcolor='rgba(155,199,0,.41)' />
+      )}
+      {isHighlighted && (
+        <Box position='absolute' width='100%' height='100%' bgcolor='rgba(155,199,0,.41)' />
+      )}
+      {piece && <Piece piece={piece} ref={drag} width='100%' height='100%' />}
+    </Box>
   );
 }
 

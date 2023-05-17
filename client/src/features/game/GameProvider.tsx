@@ -1,14 +1,14 @@
+import PieceName from '../../enums/PieceName';
+import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDragLayer } from 'react-dnd';
 import { useParams } from 'react-router';
-import Side from 'shared/enums/side';
-import GameState from 'shared/types/GameState';
-import Grid from 'shared/types/Grid';
-import History from 'shared/types/History';
 import { Socket } from 'socket.io-client';
-import { FigureItem } from '../../components/Figure';
+import GameStateData from 'types/GameStateData';
+import Grid from 'types/Grid';
+import PromotionStatus from 'types/Promotion';
+// @ts-ignore
 import pieceMoveSound from '../../piece-move-sound.mp3';
-import jsonGameStateToClass from '../../shared/utils/gameStateObjectToClass';
+import History from '../../types/History';
 import connectToGame from './connectToGame';
 
 export const GameContext = createContext<{
@@ -18,24 +18,30 @@ export const GameContext = createContext<{
   isCheck: boolean;
   isMate: boolean;
   history: History;
-  dragAllowedCells: [number, number][];
+  allowedMoves: any;
+  promotionStatus: PromotionStatus;
+  promote: (piece: PieceName) => void;
   makeMove: (from: [number, number], to: [number, number]) => void;
 }>({
   grid: [],
-  currentSideMove: Side.WHITE,
-  playerSide: Side.WHITE,
+  currentSideMove: Side.White,
+  playerSide: Side.White,
   isCheck: false,
   isMate: false,
   history: [],
-  dragAllowedCells: [],
+  promotionStatus: { isPending: false },
+  allowedMoves: {},
+  promote: () => {
+    return;
+  },
   makeMove: () => {
     return;
   },
 });
 
-const newGameState: GameState = {
+const newGameState: GameStateData = {
   grid: [],
-  currentSideMove: Side.WHITE,
+  currentSideMove: Side.White,
   allowedMoves: {},
   history: [],
   isCheck: false,
@@ -43,11 +49,10 @@ const newGameState: GameState = {
 };
 
 const GameProvider = ({ children }: { children: ReactElement }) => {
-  const [gameState, setGameState] = useState<GameState>(newGameState);
+  const [gameState, setGameState] = useState<GameStateData>(newGameState);
   const [socket, setSocket] = useState<Socket>();
-  const [dragAllowedCells, setDragAllowedCells] = useState<[number, number][]>([]);
   const [playerSide, setPlayerSide] = useState<Side>();
-  const dragInfo = useDragLayer<FigureItem>((monitor) => monitor.getItem());
+  const [promotionStatus, setPromotionStatus] = useState<PromotionStatus>({ isPending: false });
 
   const audio = useMemo(() => new Audio(pieceMoveSound), []);
 
@@ -69,9 +74,9 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
         console.log('connected to server');
       });
 
-      socket.on('state', (data) => {
+      socket.on('state', (data: GameStateData) => {
         audio.play();
-        setGameState(jsonGameStateToClass(data));
+        setGameState(data);
       });
 
       socket.on('disconnect', (reason) => {
@@ -89,35 +94,64 @@ const GameProvider = ({ children }: { children: ReactElement }) => {
     })();
   }, [id]);
 
-  useEffect(() => {
-    if (dragInfo?.figure) {
-      setDragAllowedCells(gameState.allowedMoves[`[${dragInfo.x}, ${dragInfo.y}]`]);
-    } else {
-      setDragAllowedCells([]);
-    }
-  }, [dragInfo]);
-
   const makeMove = useCallback(
     ([fromX, fromY]: [number, number], [toX, toY]: [number, number]) => {
-      socket?.emit('move', { fromX, fromY, toX, toY }, (gameState: any) => {
-        audio.play();
-        setGameState(jsonGameStateToClass(gameState));
-      });
+      const piece = grid[fromX][fromY]!;
+      if (piece.name === PieceName.Pawn && (toX === 0 || toX === grid.length - 1)) {
+        setPromotionStatus({
+          isPending: true,
+          from: { x: fromX, y: fromY },
+          to: { x: toX, y: toY },
+        });
+        return;
+      }
+
+      socket?.emit(
+        'move',
+        { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } },
+        (data: GameStateData) => {
+          if (data) {
+            audio.play();
+            setGameState(data);
+          }
+        },
+      );
     },
-    [gameState, socket],
+    [audio, gameState, socket],
   );
+
+  const promote = useCallback(
+    (piece: PieceName) => {
+      const { x: fromX, y: fromY } = promotionStatus.from!;
+      const { x: toX, y: toY } = promotionStatus.to!;
+      socket?.emit(
+        'move',
+        { fromX, fromY, toX, toY, promotionPiece: piece },
+        (data: GameStateData) => {
+          audio.play();
+          setGameState(data);
+          setPromotionStatus({ isPending: false });
+        },
+      );
+    },
+    [promotionStatus, audio],
+  );
+
+  console.log(gameState);
 
   return (
     <GameContext.Provider
       value={{
         grid,
-        dragAllowedCells,
         makeMove,
+        promote,
         currentSideMove,
         history,
         isCheck,
         isMate,
         playerSide,
+        promotionStatus,
+        allowedMoves: gameState.allowedMoves,
       }}
     >
       {children}
