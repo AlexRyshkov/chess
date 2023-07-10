@@ -6,7 +6,6 @@ import { Socket } from 'socket.io-client';
 import GameStateData from 'types/GameStateData';
 import Grid from 'types/Grid';
 import PromotionStatus from 'types/Promotion';
-// @ts-ignore
 import pieceMoveSound from '../../piece-move-sound.mp3';
 import History from '../../types/History';
 import connectToGame from './connectToGame';
