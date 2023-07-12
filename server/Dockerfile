@@ -5,5 +5,5 @@ COPY . .
 RUN npm install
 EXPOSE 3002
 
-CMD ["npm", "run", "start"]
+CMD npx knex migrate:latest; npm run start;
 

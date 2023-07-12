@@ -9,6 +9,8 @@ services:
     volumes:
       - ./server:/app
       - server-node-modules:/app/node_modules
+    depends_on:
+      - db
   client:
     restart: unless-stopped
     build:
