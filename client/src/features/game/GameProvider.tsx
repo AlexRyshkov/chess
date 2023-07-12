@@ -6,9 +6,10 @@ import { Socket } from 'socket.io-client';
 import GameStateData from 'types/GameStateData';
 import Grid from 'types/Grid';
 import PromotionStatus from 'types/Promotion';
-import pieceMoveSound from '../../piece-move-sound.mp3';
 import History from '../../types/History';
 import connectToGame from './connectToGame';
+
+const pieceMoveSound = require('../../piece-move-sound.mp3')
 
 export const GameContext = createContext<{
   grid: Grid;

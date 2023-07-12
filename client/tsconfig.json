@@ -18,7 +18,10 @@
     "baseUrl": "src",
     "paths": {
       "*": ["*"]
-    }
+    },
+    "typeRoots": [
+      "src/"
+    ]
   },
   "include": ["src"]
 }
