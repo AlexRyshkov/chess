@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Namespace } from "socket.io";
 import convertPiecesToClassInstances from "src/features/game/utils/convertPiecesToClassInstances";
 import GameState from "src/models/GameState";
@@ -27,21 +28,22 @@ export function createGameSessionSocket(session: Session): Namespace {
     SocketData
   > = io.of(session.id);
 
-  // gameNamespace.use((socket, next) => {
-  //     const token = socket.handshake.auth.token;
-  //     next();
-  //     // if (token === session.access_token) {
-  //     //     next();
-  //     // }
-  //     // next(new Error("invalid token"));
-  // });
-
   gameNamespace.on("connection", async (socket) => {
+    const payload = jwt.verify(
+      socket.handshake.auth.token,
+      process.env.SECRET_KEY
+    );
+
     const gameStateRecord = await GameState.query().findById(session.id);
     socket.emit("state", gameStateRecord.data);
 
     socket.on("move", async (moveData, callback) => {
       const gameStateRecord = await GameState.query().findById(session.id);
+
+      if (payload.side !== gameStateRecord.data.currentSideMove) {
+        return;
+      }
+
       const gameState = convertPiecesToClassInstances(gameStateRecord.data);
       const newGameState = move(moveData, gameState);
       await GameState.query()

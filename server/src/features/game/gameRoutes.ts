@@ -62,6 +62,7 @@ router.get("/game/:id/join", async (req, res, next) => {
     if (!session) {
       return res.sendStatus(404);
     }
+    console.log(session);
     const joinedPlayerSide = JoinedPlayerSide[session.status];
     if (joinedPlayerSide) {
       await session.$query().update({ status: SessionStatus.inGame });

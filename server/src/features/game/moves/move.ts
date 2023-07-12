@@ -70,7 +70,7 @@ function updateGameState(gameState: GameStateData) {
     isCheck,
     isMate,
     currentSideMove: oppositeSide,
-    allowedMoves: getAllowedMoves(gameState, gameState.currentSideMove),
+    allowedMoves: getAllowedMoves(gameState, oppositeSide),
   };
 }
 
