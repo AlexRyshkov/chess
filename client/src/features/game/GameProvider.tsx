@@ -1,4 +1,3 @@
-import PieceName from '../../enums/PieceName';
 import Side from 'enums/Side';
 import { createContext, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
@@ -6,10 +5,11 @@ import { Socket } from 'socket.io-client';
 import GameStateData from 'types/GameStateData';
 import Grid from 'types/Grid';
 import PromotionStatus from 'types/Promotion';
+import PieceName from '../../enums/PieceName';
 import History from '../../types/History';
 import connectToGame from './connectToGame';
 
-const pieceMoveSound = require('../../piece-move-sound.mp3')
+const pieceMoveSound = require('../../piece-move-sound.mp3');
 
 export const GameContext = createContext<{
   grid: Grid;

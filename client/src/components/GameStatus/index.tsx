@@ -14,16 +14,20 @@ const GameStatus = ({ playerSide, currentSideMove, isCheck, isMate }: Props) => 
 
   const getStatus = () => {
     if (isMate) {
-      return <Typography variant='body1'>{isPlayerTurn ? 'You lost' : 'You win'}</Typography>;
+      return (
+        <Typography variant='body1' textAlign='center'>
+          {isPlayerTurn ? 'You lost' : 'You win'}
+        </Typography>
+      );
     }
 
     return (
       <>
-        <Typography variant='body1'>
+        <Typography variant='body1' textAlign='center'>
           {isPlayerTurn ? 'Your turn' : 'Waiting for opponent turn'}
         </Typography>
         {isPlayerTurn && isCheck && (
-          <Typography color={theme.palette.error.main} variant='body1'>
+          <Typography color={theme.palette.error.main} variant='body1' textAlign='center'>
             Check!
           </Typography>
         )}

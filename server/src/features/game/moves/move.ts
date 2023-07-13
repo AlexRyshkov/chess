@@ -4,7 +4,7 @@ import PieceName from "../enums/PieceName";
 import Side from "../enums/Side";
 import MoveData from "../types/MoveData";
 import createPiece from "../utils/createPiece";
-import { calcIsCheck, calcIsMate } from "./calcMoves";
+import { calcIsCheck } from "./calcMoves";
 
 export default function move(moveData: MoveData, gameState: GameStateData) {
   const { grid, allowedMoves, currentSideMove } = gameState;
@@ -62,15 +62,15 @@ function updateGameState(gameState: GameStateData) {
   const oppositeSide = currentSideMove === Side.White ? Side.Black : Side.White;
 
   const isCheck = calcIsCheck(gameState, oppositeSide);
-
-  const isMate = isCheck ? calcIsMate(gameState, oppositeSide) : false;
+  const allowedMoves = getAllowedMoves(gameState, oppositeSide);
+  const isMate = isCheck ? Object.keys(allowedMoves).length === 0 : false;
 
   return {
     ...gameState,
     isCheck,
     isMate,
     currentSideMove: oppositeSide,
-    allowedMoves: getAllowedMoves(gameState, oppositeSide),
+    allowedMoves,
   };
 }
 
@@ -83,10 +83,13 @@ export function getAllowedMoves(
     for (let j = 0; j < gameState.grid.length; j++) {
       const figure = gameState.grid[i][j];
       if (figure !== null && figure.side === side) {
-        result[`[${i}, ${j}]`] = figure.getAllowedMoves(gameState, {
+        const figureAllowedMoves = figure.getAllowedMoves(gameState, {
           x: i,
           y: j,
         });
+        if (figureAllowedMoves.length > 0) {
+          result[`[${i}, ${j}]`] = figureAllowedMoves;
+        }
       }
     }
   }
